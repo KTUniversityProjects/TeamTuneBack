@@ -1,7 +1,7 @@
 package main
 import "database/sql"
 //import _ "github.com/go-sql-driver/mysql"
-//mysql
+//mysqll
 func main() {
 
 	db, err := sql.Open("mysql", "root@/test")
