@@ -4,26 +4,38 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>AngularJS � Superheroic JavaScript MVW Framework</title>
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
- 
+
   <script id="angularScript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 </head>
 <body>
-</body>
+  <div ng-app="myApp" ng-controller="myCtrl">
+
+<p>Today's welcome message is:</p>
+<h1>{{err_msg}}</h1>
+
+</div>
+
 <script>
-$.ajax({
-	url:"localhost:1337/login",
-	type:"POST",
-	data:{
-		login: "threat",
-		password: "slaptazodis"
-	},
-	dataType:"json",
-	success: function(result)
-	{
-		console.log(result);
-	}
+var app = angular.module('myApp', []);
+app.run(function ($http) {
+  // Sends this header with any AJAX request
+  $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+  // Send this header only in post requests. Specifies you are sending a JSON object
+  $http.defaults.headers.post['dataType'] = 'json'
+});
+app.controller('myCtrl', function($scope, $http) {
+    $http({
+        method : "POST",
+        data: {
+          login:"asdasd",
+          password:"asdsad"
+        },
+        url : "http://localhost:1338"
+    }).then(function mySuccess(response) {
+      console.log(response);
+        $scope.err_msg = response.data;
+    });
 });
 </script>
+</body>
 </html>
-
-
