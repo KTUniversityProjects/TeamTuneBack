@@ -1,0 +1,31 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AngularJS � Superheroic JavaScript MVW Framework</title>
+ <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+  <div ng-app="myApp" ng-controller="myCtrl">
+
+<p>Today's welcome message is:</p>
+<h1>{{err_msg}}</h1>
+
+</div>
+
+<script>
+$.ajax({
+url:"http://localhost:1338",
+type:"POST",
+data:{
+	login:"vilius",
+	password:"slaptazodis"
+},
+dataType:'json',
+success:function(result){
+	console.log(result);
+}
+});
+</script>
+</body>
+</html>
