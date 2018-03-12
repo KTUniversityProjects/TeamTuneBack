@@ -14,6 +14,8 @@ type Payload struct {
 func main() {
 	http.HandleFunc("/", Login)
 	http.ListenAndServe("localhost:1338", nil)
+
+
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -39,4 +41,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		panic(nil)
 	}
 	fmt.Fprintf(w, string(json))
+
+
+
 }
