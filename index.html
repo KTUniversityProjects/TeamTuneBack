@@ -1,0 +1,29 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AngularJS — Superheroic JavaScript MVW Framework</title>
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+ 
+  <script id="angularScript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<body>
+	
+</body> 
+
+<script>
+$.ajax({
+	url:"localhost:1337/login",
+	type:"POST",
+	data:{
+		login: "threat",
+		password: "slaptazodis"
+	},
+	dataType:"json",
+	success: function(result)
+	{
+		console.log(result);
+	}
+});
+</script>
+</html>
