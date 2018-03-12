@@ -29,11 +29,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	ErrorCode := 0
 
 	if(username != "vilius" || password != "slaptazodis") {
-		ErrorMsg := "Blogi prisijungimo duomenys"
-		ErrorCode := 1
+		ErrorMsg = "Blogi prisijungimo duomenys"
+		ErrorCode = 1
 	}
 
 	p := Payload{ErrorMsg, ErrorCode}
 
-	fmt.Fprintf(w, string(json.MarshalIndent(p, "", "  ")))
+
+	json, err := json.MarshalIndent(p, "", "  ")
+	if err == nil{
+		panic(nil)
+	}
+	fmt.Fprintf(w, string(json))
 }
