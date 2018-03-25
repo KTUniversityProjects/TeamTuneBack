@@ -6,26 +6,22 @@ import (
 	"fmt"
 )
 
-type Decodable interface{
-
-}
-
-type Payload struct {
-	ErrorMessage string
-	ReturnCode   int
-}
+//Interface for Json body decoding
+type Decodable interface{}
 
 var p = Response{201, "No Response Returned"}
 
+//Adds CORS header to response Writer
 func CORS(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 }
 
-func DecodeRequest(t Decodable, r *http.Request) bool {
+//Decodes response to ,,item"
+func DecodeRequest(item Decodable, r *http.Request) bool {
 
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&t)
+	err := decoder.Decode(&item)
 	if err != nil {
 		SetReponse("decode_failure")
 		return false
@@ -35,6 +31,7 @@ func DecodeRequest(t Decodable, r *http.Request) bool {
 	return true
 }
 
+//Prints generated Response
 func PrintReponse(w http.ResponseWriter) {
 	json, err := json.MarshalIndent(p, "", "  ")
 	if err != nil {
@@ -43,14 +40,15 @@ func PrintReponse(w http.ResponseWriter) {
 	fmt.Fprintf(w, string(json))
 }
 
-func SetReponse(ErrorID string) {
+//Sets Response by ID (From Errors.go file)
+func SetReponse(ID string) {
 	if len(Responses) == 0 {
 		loadReponses()
 	}
-	if _, ok := Responses[ErrorID]; ok {
-		p = Responses[ErrorID]
+	if _, ok := Responses[ID]; ok {
+		p = Responses[ID]
 	} else {
-		panic("WRONG ERROR ID  - " + ErrorID)
+		panic("WRONG ERROR ID  - " + ID)
 	}
 }
 

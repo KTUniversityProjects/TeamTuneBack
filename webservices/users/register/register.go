@@ -2,18 +2,20 @@ package main
 
 import (
 	"net/http"
-	"../core"
+	"../../core"
 	"gopkg.in/mgo.v2/bson"
-	"../structures/users"
+	"../../users"
 )
 
 type ServiceDatabase struct {
 	Dao *core.MongoDatabase
 }
 
+//Adds User to Database
 func (r ServiceDatabase) addUser(user users.RegisterStructure) bool {
 	r.Dao.C("users")
 
+	user.Password = users.EncryptPassword(user.Password)
 	err := r.Dao.Collection.Insert(&user)
 	if err != nil {
 		core.SetReponse("database_error")
@@ -23,10 +25,11 @@ func (r ServiceDatabase) addUser(user users.RegisterStructure) bool {
 	return true
 }
 
+//Checks if User and Email does not exists in Database
 func (r ServiceDatabase) checkFieldsExistance(user users.RegisterStructure) bool {
 	r.Dao.C("users")
 
-	count, err := Database.Dao.Collection.Find(bson.M{"Username": user.Username}).Count()
+	count, err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).Count()
 	if err != nil {
 		core.SetReponse("database_error")
 		return false
@@ -36,7 +39,7 @@ func (r ServiceDatabase) checkFieldsExistance(user users.RegisterStructure) bool
 		return false
 	}
 
-	count, err = Database.Dao.Collection.Find(bson.M{"Email": user.Email}).Count()
+	count, err = Database.Dao.Collection.Find(bson.M{"email": user.Email}).Count()
 	if err != nil {
 		core.SetReponse("database_error")
 		return false
@@ -48,10 +51,27 @@ func (r ServiceDatabase) checkFieldsExistance(user users.RegisterStructure) bool
 	return true
 }
 
+//Checks if User and Email does not exists in Database
+func (r ServiceDatabase) validate(user users.RegisterStructure) bool {
+
+	if user.Username == "" || user.Password == "" || user.Email == "" {
+		core.SetReponse("empty_fields")
+		return false
+	}
+
+	if  user.Password2 != user.Password {
+		core.SetReponse("password_match")
+		return false
+	}
+
+	return Database.checkFieldsExistance(user)
+}
+
 var Database = ServiceDatabase{&core.Dao}
 
+//Connects to database and listens to port
 func main() {
-	Database.Dao.Start("localhost:27017", "teamtune")
+	Database.Dao.Connect("localhost:27017", "teamtune")
 	http.HandleFunc("/", do)
 	http.ListenAndServe("localhost:1339", nil)
 }
@@ -62,8 +82,8 @@ func do(w http.ResponseWriter, r *http.Request) {
 	//Parses request data to
 	var data users.RegisterStructure
 	if core.DecodeRequest(&data, r){
-		//Checks Username and Email
-		if Database.checkFieldsExistance(data) {
+		//Validates sent params
+		if Database.validate(data) {
 			Database.addUser(data) //Adds user to database
 		}
 	}
