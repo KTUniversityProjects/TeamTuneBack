@@ -49,10 +49,8 @@ func SetResponse(ID string) {
 	}
 }
 
-/* Try to find way to Close Response on PrintResponse(w http.ResponseWriter) method and then use this method for error handling
-
+//Find out if this might be possible
 func ThrowResponse(ErrorID string, w http.ResponseWriter){
-	SetReponse(ErrorID)
+	SetResponse(ErrorID)
 	PrintReponse(w)
 }
-*/
