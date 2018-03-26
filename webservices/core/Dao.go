@@ -2,9 +2,8 @@ package core
 
 import  (
 	"gopkg.in/mgo.v2"
-	_ "gopkg.in/mgo.v2/bson"
 	"fmt"
-	"gopkg.in/mgo.v2/bson"
+	"./structures"
 )
 
 //Database Instance
@@ -40,11 +39,10 @@ func (r *MongoDatabase) Connect(host string, databaseName string){
 }
 
 //Method for connection
-func (r *MongoDatabase) CheckSession(sessionID string) (bool, string){
+func (r *MongoDatabase) CheckSession(session structures.Session) (bool, string){
 	r.C("sessions")
 
-	var session = Session{}
-	err := r.Collection.Find(bson.M{"_id": bson.ObjectIdHex(sessionID)}).One(&session)
+	err := r.Collection.Find(session).One(&session)
 	if err != nil {
 		SetResponse("wrong_session")
 		return false, session.UserID

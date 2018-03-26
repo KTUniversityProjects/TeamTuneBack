@@ -1,5 +1,7 @@
 package projects
 
+import "../../core/structures"
+
 type Project struct {
 	Id string        `json:"id,omitempty" bson:"_id,omitempty"`
 	Name string  `json:"name,omitempty" bson:"name,omitempty"`
@@ -9,5 +11,5 @@ type Project struct {
 
 type ProjectCreation struct{
 	Project Project    `json:"project,omitempty"`
-	SessionID string       `json:"session,omitempty"`
+	Session structures.Session       `json:"session,omitempty"`
 }

@@ -3,19 +3,23 @@ package main
 import (
 	"net/http"
 	"../../../core"
+	_ "gopkg.in/mgo.v2/bson"
+	"../../projects"
 	"../../../core/structures"
-	"gopkg.in/mgo.v2/bson"
-	"../../users"
 	_ "fmt"
+	_ "golang.org/x/crypto/bcrypt"
+	"gopkg.in/mgo.v2/bson"
 	"golang.org/x/crypto/bcrypt"
+	"os/user"
 )
 
 type ServiceDatabase struct {
 	Dao *core.MongoDatabase
 }
+var Database = ServiceDatabase{&core.Dao}
 
 //Check if correct username and password
-func (r ServiceDatabase) checkCredentials(user users.User) string {
+func (r ServiceDatabase) getList(session core.Session) string {
 	r.Dao.C("users")
 
 	user.Password = users.EncryptPassword(user.Password)
@@ -37,42 +41,25 @@ func (r ServiceDatabase) checkCredentials(user users.User) string {
 	return bson.ObjectId(login.Id).Hex()
 }
 
-//Check if correct username and password
-func (r ServiceDatabase) CreateSession(user users.User, userID string) bool {
-	r.Dao.C("sessions")
-	i := bson.NewObjectId()
-
-	var session = structures.Session{SessionID:i,UserID:userID}
-	err := r.Dao.Collection.Insert(&session)
-	if err != nil {
-		core.SetResponse("database_error")
-		return false
-	}
-
-	core.SetResponse("logged_in")
-	core.SetData(i.Hex())
-
-	return true
-}
-
-var Database = ServiceDatabase{&core.Dao}
 
 //Connects to database and listens to port
 func main() {
 	Database.Dao.Connect(core.Config.DatabaseHost + ":" + core.Config.DatabasePort, core.Config.DatabaseName)
 	http.HandleFunc("/", do)
-	http.ListenAndServe(core.Config.Host + ":1338", nil)
+	http.ListenAndServe(core.Config.Host + ":1337", nil)
 }
 
 func do(w http.ResponseWriter, r *http.Request) {
 	core.CORS(w)
 
 	//Parses request data to
-	var data users.User
+	var data core.Session
 	if core.DecodeRequest(&data, r){
-		//Checks Username and Email
-		if userID := Database.checkCredentials(data); userID != "" {
-			Database.CreateSession(data, userID) //Logs in
+
+		var success = false
+		success,data.Project.User = Database.Dao.CheckSession(data)
+		if success {
+			Database.getList(data.Project) //Adds project to database
 		}
 	}
 

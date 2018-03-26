@@ -3,7 +3,6 @@ package main
 import (
 	"net/http"
 	"../../../core"
-	_ "gopkg.in/mgo.v2/bson"
 	"../../projects"
 	_ "fmt"
 	_ "golang.org/x/crypto/bcrypt"
@@ -78,7 +77,7 @@ func do(w http.ResponseWriter, r *http.Request) {
 	if core.DecodeRequest(&data, r){
 
 		var success = false
-		success,data.Project.User = Database.Dao.CheckSession(data.SessionID)
+		success,data.Project.User = Database.Dao.CheckSession(data.Session)
 		if success {
 
 			if Database.validate(data.Project) {
