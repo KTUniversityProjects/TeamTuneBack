@@ -1,6 +1,6 @@
 package users
 
-type UserStruct struct {
+type User struct {
 	Id string        `json:"id" bson:"_id,omitempty"`
 	Username string  `json:"username"`
 	Password string  `json:"password"`

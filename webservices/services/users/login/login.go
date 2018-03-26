@@ -14,12 +14,12 @@ type ServiceDatabase struct {
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) checkCredentials(user users.UserStruct) string {
+func (r ServiceDatabase) checkCredentials(user users.User) string {
 	r.Dao.C("users")
 
 	user.Password = users.EncryptPassword(user.Password)
 
-	var login = users.UserStruct{}
+	var login = users.User{}
 	err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).One(&login)
 	if err != nil {
 		core.SetResponse("database_error")
@@ -37,7 +37,7 @@ func (r ServiceDatabase) checkCredentials(user users.UserStruct) string {
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) GetUser(user users.UserStruct) bool {
+func (r ServiceDatabase) GetUser(user users.User) bool {
 	r.Dao.C("sessions")
 	err := r.Dao.Collection.Insert(bson.M{"user": user.Username})
 	if err != nil {
@@ -49,7 +49,7 @@ func (r ServiceDatabase) GetUser(user users.UserStruct) bool {
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) CreateSession(user users.UserStruct, userID string) bool {
+func (r ServiceDatabase) CreateSession(user users.User, userID string) bool {
 	r.Dao.C("sessions")
 	i := bson.NewObjectId()
 
@@ -78,7 +78,7 @@ func do(w http.ResponseWriter, r *http.Request) {
 	core.CORS(w)
 
 	//Parses request data to
-	var data users.UserStruct
+	var data users.User
 	if core.DecodeRequest(&data, r){
 		//Checks Username and Email
 		if userID := Database.checkCredentials(data); userID != "" {

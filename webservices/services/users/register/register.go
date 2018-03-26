@@ -12,7 +12,7 @@ type ServiceDatabase struct {
 }
 
 //Adds User to Database
-func (r ServiceDatabase) addUser(user users.UserStruct) bool {
+func (r ServiceDatabase) addUser(user users.User) bool {
 	r.Dao.C("users")
 
 	user.Password = users.EncryptPassword(user.Password)
@@ -26,7 +26,7 @@ func (r ServiceDatabase) addUser(user users.UserStruct) bool {
 }
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) checkFieldsExistance(user users.UserStruct) bool {
+func (r ServiceDatabase) checkFieldsExistance(user users.User) bool {
 	r.Dao.C("users")
 
 	count, err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).Count()
@@ -52,7 +52,7 @@ func (r ServiceDatabase) checkFieldsExistance(user users.UserStruct) bool {
 }
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) validate(user users.UserStruct) bool {
+func (r ServiceDatabase) validate(user users.User) bool {
 
 	if user.Username == "" || user.Password == "" || user.Email == "" {
 		core.SetResponse("empty_fields")
@@ -80,7 +80,7 @@ func do(w http.ResponseWriter, r *http.Request) {
 	core.CORS(w)
 
 	//Parses request data to
-	var data users.UserStruct
+	var data users.User
 	if core.DecodeRequest(&data, r){
 		//Validates sent params
 		if Database.validate(data) {
