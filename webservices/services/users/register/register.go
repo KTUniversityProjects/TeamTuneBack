@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	"../../core"
+	"../../../core"
 	"gopkg.in/mgo.v2/bson"
 	"../../users"
 )
