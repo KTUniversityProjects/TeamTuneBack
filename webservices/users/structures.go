@@ -1,13 +1,9 @@
 package users
 
-type RegisterStructure struct {
-	Username string
-	Password string
-	Password2 string
-	Email    string
-}
-
-type LoginStructure struct {
-	Username string
-	Password string
+type UserStruct struct {
+	Id string        `json:"id" bson:"_id,omitempty"`
+	Username string  `json:"username"`
+	Password string  `json:"password"`
+	Password2 string `json:"password2"`
+	Email    string  `json:"email"`
 }

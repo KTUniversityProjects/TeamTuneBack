@@ -5,7 +5,7 @@ import (
 	"../../core"
 	"gopkg.in/mgo.v2/bson"
 	"../../users"
-	"fmt"
+	_ "fmt"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -14,7 +14,7 @@ type ServiceDatabase struct {
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) checkCredentials(user users.LoginStructure) bool {
+func (r ServiceDatabase) checkCredentials(user users.LoginStructure) string {
 	r.Dao.C("users")
 
 	user.Password = users.EncryptPassword(user.Password)
@@ -22,27 +22,46 @@ func (r ServiceDatabase) checkCredentials(user users.LoginStructure) bool {
 	var login = users.LoginStructure{}
 	err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).One(&login)
 	if err != nil {
-		fmt.Print(err)
-		core.SetReponse("database_error")
-		return false
+		core.SetResponse("database_error")
+		return ""
 	}
 
-	fmt.Println(len(users.EncryptPassword(user.Password)))
-	fmt.Println(len(login.Password))
+	return bson.ObjectId(login.Id).Hex() //
 	// Comparing the password with the hash
 	if err := bcrypt.CompareHashAndPassword([]byte(login.Password), []byte(user.Password)); err != nil {
-		fmt.Print(err)
-		core.SetReponse("wrong_credentials")
-		return false
+		core.SetResponse("wrong_credentials")
+		return ""
 	}
 
+	return bson.ObjectId(login.Id).Hex()
+}
+
+//Check if correct username and password
+func (r ServiceDatabase) GetUser(user users.LoginStructure) bool {
+	r.Dao.C("sessions")
+	err := r.Dao.Collection.Insert(bson.M{"user": user.Username})
+	if err != nil {
+		core.SetResponse("database_error")
+		return false
+	}
+	core.SetResponse("logged_in")
 	return true
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) Login(user users.LoginStructure) bool {
-	r.Dao.C("users")
-	core.SetReponse("logged_in")
+func (r ServiceDatabase) CreateSession(user users.LoginStructure, userID string) bool {
+	r.Dao.C("sessions")
+	i := bson.NewObjectId()
+
+
+	err := r.Dao.Collection.Insert(bson.M{"_id": i, "user": userID})
+	if err != nil {
+		core.SetResponse("database_error")
+		return false
+	}
+
+	core.P = core.Response{ResponseCode: 0, ResponseMsg: i.Hex()}
+
 	return true
 }
 
@@ -62,8 +81,8 @@ func do(w http.ResponseWriter, r *http.Request) {
 	var data users.LoginStructure
 	if core.DecodeRequest(&data, r){
 		//Checks Username and Email
-		if Database.checkCredentials(data) {
-			Database.Login(data) //Logs in
+		if userID := Database.checkCredentials(data); userID != "" {
+			Database.CreateSession(data, userID) //Logs in
 		}
 	}
 

@@ -6,10 +6,7 @@ import (
 	"fmt"
 )
 
-//Interface for Json body decoding
-type Decodable interface{}
-
-var p = Response{201, "No Response Returned"}
+var P = Response{201, "No Response Returned"}
 
 //Adds CORS header to response Writer
 func CORS(w http.ResponseWriter) {
@@ -18,12 +15,12 @@ func CORS(w http.ResponseWriter) {
 }
 
 //Decodes response to ,,item"
-func DecodeRequest(item Decodable, r *http.Request) bool {
+func DecodeRequest(item interface{}, r *http.Request) bool {
 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&item)
 	if err != nil {
-		SetReponse("decode_failure")
+		SetResponse("decode_failure")
 		return false
 	}
 
@@ -33,20 +30,20 @@ func DecodeRequest(item Decodable, r *http.Request) bool {
 
 //Prints generated Response
 func PrintReponse(w http.ResponseWriter) {
-	json, err := json.MarshalIndent(p, "", "  ")
+	json, err := json.MarshalIndent(P, "", "  ")
 	if err != nil {
-		SetReponse("parse_error")
+		SetResponse("parse_error")
 	}
 	fmt.Fprintf(w, string(json))
 }
 
 //Sets Response by ID (From Errors.go file)
-func SetReponse(ID string) {
+func SetResponse(ID string) {
 	if len(Responses) == 0 {
-		loadReponses()
+		loadResponses()
 	}
 	if _, ok := Responses[ID]; ok {
-		p = Responses[ID]
+		P = Responses[ID]
 	} else {
 		panic("WRONG ERROR ID  - " + ID)
 	}

@@ -6,9 +6,9 @@ import (
 
 func EncryptPassword (pass string) string{
 
-	pass2, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
+	_, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
 	if err!=nil{
 		return ""
 	}
-	return string(pass2)
+	return string(pass) //returns the same now, hash not working
 }

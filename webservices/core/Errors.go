@@ -8,13 +8,18 @@ type Response struct{
 var Responses = make(map[string]Response)
 
 //Error responses used in WEB services
-func loadReponses(){
-	Responses["decode_failure"] = Response{200, "Failed to decode Request data"}
-
+func loadResponses(){
+	//system
 	Responses["database_error"] = Response{300, "Failed to make database query"}
 
+
+	Responses["decode_failure"] = Response{200, "Failed to decode Request data"}
 	Responses["no_response"] = Response{500, "No Response Return"}
 
+	//Session
+	Responses["wrong_session"] = Response{300, "Wrong session ID"}
+
+	//Users module
 	Responses["username_exists"] = Response{400, "Username Already Exists"}
 	Responses["email_exists"] = Response{401, "Email Already Exists"}
 	Responses["empty_fields"] = Response{402, "No Empty Fields"}

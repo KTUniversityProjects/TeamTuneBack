@@ -4,6 +4,7 @@ import  (
 	"gopkg.in/mgo.v2"
 	_ "gopkg.in/mgo.v2/bson"
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 )
 
 //Database Instance
@@ -36,5 +37,25 @@ func (r *MongoDatabase) Connect(host string, databaseName string){
 	}
 
 	r.D(databaseName)
+}
+
+//Method for connection
+func (r *MongoDatabase) CheckSession(sessionID string) (bool, string){
+	r.C("sessions")
+
+
+	var session = struct {
+		Id string 			`bson:"_id,omitempty"`
+		UserId string		`bson:"user,omitempty"`
+	}{}
+
+	err := r.Collection.Find(bson.M{"_id": bson.ObjectIdHex(sessionID)}).One(&session)
+	if err != nil {
+		fmt.Println(err)
+		SetResponse("wrong_session")
+		return false, ""
+	}
+
+	return true, session.UserId
 }
 
