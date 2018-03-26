@@ -8,6 +8,7 @@ import (
 	"../../users"
 	_ "fmt"
 	"fmt"
+	"time"
 )
 
 type ServiceDatabase struct {
@@ -38,7 +39,12 @@ func (r ServiceDatabase) CreateSession(user users.User, userID bson.ObjectId) bo
 	r.Dao.C("sessions")
 	i := bson.NewObjectId()
 
-	var session = structures.Session{SessionID:i,UserID:userID}
+	//Create session object for insertion
+	var session = structures.Session{
+		SessionID:i,UserID:userID,
+		Expires:time.Now().Add(time.Duration(24 * time.Hour))}
+
+	//Database insert
 	err := r.Dao.Collection.Insert(&session)
 	if err != nil {
 		fmt.Println(err)
@@ -47,7 +53,7 @@ func (r ServiceDatabase) CreateSession(user users.User, userID bson.ObjectId) bo
 	}
 
 	core.SetResponse("logged_in")
-	core.SetData(i.Hex())
+	core.SetData(i)
 
 	return true
 }

@@ -5,6 +5,7 @@ import  (
 	"fmt"
 	"./structures"
 	"gopkg.in/mgo.v2/bson"
+	"time"
 )
 
 //Database Instance
@@ -43,10 +44,17 @@ func (r *MongoDatabase) Connect(host string, databaseName string){
 func (r *MongoDatabase) CheckSession(session structures.Session) (bool, bson.ObjectId){
 	r.C("sessions")
 
-	err := r.Collection.Find(session).One(&session)
+
+	err := r.Collection.Find(bson.M{"_id":session.SessionID, "expires" : bson.M{"$gt": time.Now()}}).One(&session)
 	if err != nil {
 		SetResponse("wrong_session")
 		return false, session.UserID
+	}
+
+	err = r.Collection.Update(bson.M{"_id":session.SessionID}, bson.M{"$set": bson.M{"expires" : time.Now().Add(time.Duration(24*time.Hour))}})
+	if err != nil {
+		SetResponse("database_error")
+		return true, session.UserID
 	}
 
 	return true, session.UserID
