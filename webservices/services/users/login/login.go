@@ -7,7 +7,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"../../users"
 	_ "fmt"
-	"golang.org/x/crypto/bcrypt"
+	"fmt"
 )
 
 type ServiceDatabase struct {
@@ -15,36 +15,33 @@ type ServiceDatabase struct {
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) checkCredentials(user users.User) string {
+func (r ServiceDatabase) checkCredentials(user users.User) (bool, bson.ObjectId) {
 	r.Dao.C("users")
 
-	user.Password = users.EncryptPassword(user.Password)
-
 	var login = users.User{}
-	err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).One(&login)
+	err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).Select(bson.M{"_id" :1, "password" : 1}).One(&login)
 	if err != nil {
 		core.SetResponse("database_error")
-		return ""
+		return false, login.Id
 	}
 
-	return bson.ObjectId(login.Id).Hex() //
-	// Comparing the password with the hash
-	if err := bcrypt.CompareHashAndPassword([]byte(login.Password), []byte(user.Password)); err != nil {
+	if success := users.CheckPasswordHash(user.Password, login.Password); !success {
 		core.SetResponse("wrong_credentials")
-		return ""
+		return false, login.Id
 	}
 
-	return bson.ObjectId(login.Id).Hex()
+	return true, login.Id
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) CreateSession(user users.User, userID string) bool {
+func (r ServiceDatabase) CreateSession(user users.User, userID bson.ObjectId) bool {
 	r.Dao.C("sessions")
 	i := bson.NewObjectId()
 
 	var session = structures.Session{SessionID:i,UserID:userID}
 	err := r.Dao.Collection.Insert(&session)
 	if err != nil {
+		fmt.Println(err)
 		core.SetResponse("database_error")
 		return false
 	}
@@ -71,8 +68,8 @@ func do(w http.ResponseWriter, r *http.Request) {
 	var data users.User
 	if core.DecodeRequest(&data, r){
 		//Checks Username and Email
-		if userID := Database.checkCredentials(data); userID != "" {
-			Database.CreateSession(data, userID) //Logs in
+		if success, userID := Database.checkCredentials(data); success {
+			Database.CreateSession(data, bson.ObjectId(userID)) //Logs in
 		}
 	}
 

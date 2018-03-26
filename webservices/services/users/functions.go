@@ -4,11 +4,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func EncryptPassword (pass string) string{
 
-	_, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
-	if err!=nil{
-		return ""
-	}
-	return string(pass) //returns the same now, hash not working
+func EncryptPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }

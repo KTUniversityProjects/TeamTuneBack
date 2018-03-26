@@ -9,8 +9,6 @@ import (
 	_ "fmt"
 	_ "golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
-	"golang.org/x/crypto/bcrypt"
-	"os/user"
 )
 
 type ServiceDatabase struct {
@@ -19,26 +17,20 @@ type ServiceDatabase struct {
 var Database = ServiceDatabase{&core.Dao}
 
 //Check if correct username and password
-func (r ServiceDatabase) getList(session core.Session) string {
-	r.Dao.C("users")
+func (r ServiceDatabase) getList(userID bson.ObjectId) bool {
+	r.Dao.C("projects")
 
-	user.Password = users.EncryptPassword(user.Password)
+	var results []projects.Project
 
-	var login = users.User{}
-	err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).One(&login)
+	err := Database.Dao.Collection.Find(bson.M{"user": userID}).Select(bson.M{"_id": 1, "name":1}).All(&results)
 	if err != nil {
 		core.SetResponse("database_error")
-		return ""
+		return false
 	}
 
-	return bson.ObjectId(login.Id).Hex() //
-	// Comparing the password with the hash
-	if err := bcrypt.CompareHashAndPassword([]byte(login.Password), []byte(user.Password)); err != nil {
-		core.SetResponse("wrong_credentials")
-		return ""
-	}
-
-	return bson.ObjectId(login.Id).Hex()
+	core.SetResponse("list_retrieved")
+	core.SetData(results)
+	return true
 }
 
 
@@ -53,13 +45,12 @@ func do(w http.ResponseWriter, r *http.Request) {
 	core.CORS(w)
 
 	//Parses request data to
-	var data core.Session
+	var data structures.Session
 	if core.DecodeRequest(&data, r){
 
-		var success = false
-		success,data.Project.User = Database.Dao.CheckSession(data)
+		success,UserID := Database.Dao.CheckSession(data)
 		if success {
-			Database.getList(data.Project) //Adds project to database
+			Database.getList(UserID) //Adds project to database
 		}
 	}
 

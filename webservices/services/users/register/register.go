@@ -15,8 +15,14 @@ type ServiceDatabase struct {
 func (r ServiceDatabase) addUser(user users.User) bool {
 	r.Dao.C("users")
 
-	user.Password = users.EncryptPassword(user.Password)
-	err := r.Dao.Collection.Insert(&user)
+	var err error
+	user.Password,err = users.EncryptPassword(user.Password)
+	if err != nil {
+		core.SetResponse("encryption_error")
+		return false
+	}
+
+	err = r.Dao.Collection.Insert(&user)
 	if err != nil {
 		core.SetResponse("database_error")
 		return false

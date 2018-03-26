@@ -9,16 +9,16 @@ var Config = ConfigStruct{
 	DatabaseName: "teamtune",
 
 	//Server
-	Host: "localhost",
-	}
+	Host: "localhost"}
 
 //Mongo database collections
 var MGOCollections = map[string]string{
 	"users":    "users",
 	"sessions": "sessions",
-	"projects": "projects",
-}
+	"projects": "projects"}
 
+
+//EOF
 
 type ConfigStruct struct {
 	DatabaseHost string

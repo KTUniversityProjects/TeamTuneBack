@@ -30,11 +30,11 @@ func DecodeRequest(item interface{}, r *http.Request) bool {
 
 //Prints generated Response
 func PrintReponse(w http.ResponseWriter) {
-	json, err := json.MarshalIndent(P, "", "  ")
+	result, err := json.MarshalIndent(P, "", "  ")
 	if err != nil {
 		SetResponse("parse_error")
 	}
-	fmt.Fprintf(w, string(json))
+	fmt.Fprintf(w, string(result))
 }
 
 //Sets Response by ID (From Errors.go file)
