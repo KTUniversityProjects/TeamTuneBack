@@ -6,9 +6,8 @@ import (
 	"../../../core/structures"
 	"gopkg.in/mgo.v2/bson"
 	"../../users"
-	_ "fmt"
-	"fmt"
 	"time"
+	"fmt"
 )
 
 type ServiceDatabase struct {
@@ -47,7 +46,6 @@ func (r ServiceDatabase) CreateSession(user users.User, userID bson.ObjectId) bo
 	//Database insert
 	err := r.Dao.Collection.Insert(&session)
 	if err != nil {
-		fmt.Println(err)
 		core.SetResponse("database_error")
 		return false
 	}

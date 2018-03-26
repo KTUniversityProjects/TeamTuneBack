@@ -3,11 +3,8 @@ package main
 import (
 	"net/http"
 	"../../../core"
-	_ "gopkg.in/mgo.v2/bson"
 	"../../projects"
 	"../../../core/structures"
-	_ "fmt"
-	_ "golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
 )
 

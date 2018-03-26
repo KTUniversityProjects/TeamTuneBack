@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"../../../core"
 	"../../projects"
-	_ "fmt"
-	_ "golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
 )
 

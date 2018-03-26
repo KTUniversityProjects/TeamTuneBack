@@ -44,7 +44,6 @@ func (r *MongoDatabase) Connect(host string, databaseName string){
 func (r *MongoDatabase) CheckSession(session structures.Session) (bool, bson.ObjectId){
 	r.C("sessions")
 
-
 	err := r.Collection.Find(bson.M{"_id":session.SessionID, "expires" : bson.M{"$gt": time.Now()}}).One(&session)
 	if err != nil {
 		SetResponse("wrong_session")
