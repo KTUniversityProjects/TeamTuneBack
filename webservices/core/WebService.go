@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-var P = Response{201, "No Response Returned"}
+var P = Response{ResponseCode: 201, ResponseMsg: "No Response Returned"}
 
 //Adds CORS header to response Writer
 func CORS(w http.ResponseWriter) {
@@ -49,8 +49,13 @@ func SetResponse(ID string) {
 	}
 }
 
+//Sets Response by ID (From Errors.go file)
+func SetData(data interface{}) {
+	P.ReturnData = data
+}
+
 //Find out if this might be possible
-func ThrowResponse(ErrorID string, w http.ResponseWriter){
+func ThrowResponse(ErrorID string, w http.ResponseWriter) {
 	SetResponse(ErrorID)
 	PrintReponse(w)
 }

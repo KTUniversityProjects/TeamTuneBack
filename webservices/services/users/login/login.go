@@ -37,18 +37,6 @@ func (r ServiceDatabase) checkCredentials(user users.User) string {
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) GetUser(user users.User) bool {
-	r.Dao.C("sessions")
-	err := r.Dao.Collection.Insert(bson.M{"user": user.Username})
-	if err != nil {
-		core.SetResponse("database_error")
-		return false
-	}
-	core.SetResponse("logged_in")
-	return true
-}
-
-//Check if correct username and password
 func (r ServiceDatabase) CreateSession(user users.User, userID string) bool {
 	r.Dao.C("sessions")
 	i := bson.NewObjectId()
@@ -60,7 +48,8 @@ func (r ServiceDatabase) CreateSession(user users.User, userID string) bool {
 		return false
 	}
 
-	core.P = core.Response{ResponseCode: 0, ResponseMsg: i.Hex()}
+	core.SetResponse("logged_in")
+	core.SetData(i.Hex())
 
 	return true
 }
