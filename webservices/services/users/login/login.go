@@ -41,8 +41,8 @@ func (r ServiceDatabase) CreateSession(user users.User, userID string) bool {
 	r.Dao.C("sessions")
 	i := bson.NewObjectId()
 
-
-	err := r.Dao.Collection.Insert(bson.M{"_id": i, "user": userID})
+	var session = core.Session{SessionID:i,UserID:userID}
+	err := r.Dao.Collection.Insert(&session)
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
@@ -58,9 +58,9 @@ var Database = ServiceDatabase{&core.Dao}
 
 //Connects to database and listens to port
 func main() {
-	Database.Dao.Connect("localhost:27017", "teamtune")
+	Database.Dao.Connect(core.Config.DatabaseHost + ":" + core.Config.DatabasePort, core.Config.DatabaseName)
 	http.HandleFunc("/", do)
-	http.ListenAndServe("localhost:1338", nil)
+	http.ListenAndServe(core.Config.Host + ":1338", nil)
 }
 
 func do(w http.ResponseWriter, r *http.Request) {

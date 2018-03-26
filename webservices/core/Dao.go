@@ -25,7 +25,7 @@ func (r *MongoDatabase) D(databaseName string){
 
 //Method for selecting Collection
 func (r *MongoDatabase) C(collection string){
-	r.Collection = r.Database.C(collection)
+	r.Collection = r.Database.C(MGOCollections[collection])
 }
 
 //Method for connection
@@ -43,19 +43,13 @@ func (r *MongoDatabase) Connect(host string, databaseName string){
 func (r *MongoDatabase) CheckSession(sessionID string) (bool, string){
 	r.C("sessions")
 
-
-	var session = struct {
-		Id string 			`bson:"_id,omitempty"`
-		UserId string		`bson:"user,omitempty"`
-	}{}
-
+	var session = Session{}
 	err := r.Collection.Find(bson.M{"_id": bson.ObjectIdHex(sessionID)}).One(&session)
 	if err != nil {
-		fmt.Println(err)
 		SetResponse("wrong_session")
-		return false, ""
+		return false, session.UserID
 	}
 
-	return true, session.UserId
+	return true, session.UserID
 }
 
