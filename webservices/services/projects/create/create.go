@@ -18,7 +18,7 @@ var Database = ServiceDatabase{&core.Dao}
 func (r ServiceDatabase) checkFieldsExistance(project projects.Project) bool {
 	r.Dao.C("projects")
 
-	count, err := Database.Dao.Collection.Find(bson.M{"name": project.Name, "user": project.User}).Count()
+	count, err := Database.Dao.Collection.Find(bson.M{"name": project.Name, "user": project.Users[0]}).Count()
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
@@ -37,10 +37,6 @@ func (r ServiceDatabase) validate(project projects.Project) bool {
 		core.SetResponse("empty_fields")
 		return false
 	}
-	if project.User == ""{
-		core.SetResponse("decode_failure")
-		return false
-	}
 
 	return Database.checkFieldsExistance(project)
 }
@@ -50,7 +46,7 @@ func (r ServiceDatabase) validate(project projects.Project) bool {
 func (r ServiceDatabase) addProject(project projects.Project) bool {
 	r.Dao.C("projects")
 
-	err := r.Dao.Collection.Insert(&project)
+	err := r.Dao.Collection.Insert(project)
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
@@ -74,10 +70,14 @@ func do(w http.ResponseWriter, r *http.Request) {
 	var data projects.ProjectCreation
 	if core.DecodeRequest(&data, r){
 
-		var success = false
-		success,data.Project.User = Database.Dao.CheckSession(data.Session)
+		success,user := Database.Dao.CheckSession(data.Session)
 		if success {
-
+			data.Project.Users = []projects.ProjectUser{
+				{
+					ID:user,
+					Creator:true,
+				},
+			}
 			if Database.validate(data.Project) {
 				Database.addProject(data.Project) //Adds project to database
 			}

@@ -6,6 +6,7 @@ import (
 	"../../projects"
 	"../../../core/structures"
 	"gopkg.in/mgo.v2/bson"
+	"fmt"
 )
 
 type ServiceDatabase struct {
@@ -18,8 +19,8 @@ func (r ServiceDatabase) getList(userID bson.ObjectId) bool {
 	r.Dao.C("projects")
 
 	var results []projects.Project
-
-	err := Database.Dao.Collection.Find(bson.M{"user": userID}).Select(bson.M{"_id": 1, "name":1}).All(&results)
+	fmt.Println(bson.M{"users": bson.M{"_id":userID}})
+	err := Database.Dao.Collection.Find(bson.M{"users": bson.M{"$elemMatch":bson.M{"_id":userID}}}).Select(bson.M{"_id": 1, "name":1}).All(&results)
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
