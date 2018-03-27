@@ -10,6 +10,7 @@ var Responses = make(map[string]Response)
 
 //Error responses used in WEB services
 func loadResponses() {
+
 	//System
 	Responses["database_error"] = Response{ResponseCode: 200, ResponseMsg: "Failed to make database query"}
 	Responses["decode_failure"] = Response{ResponseCode: 201, ResponseMsg: "Failed to decode Request data"}
@@ -20,7 +21,6 @@ func loadResponses() {
 	Responses["empty_fields"] = Response{ResponseCode: 220, ResponseMsg: "No Empty Fields"}
 	Responses["name_exists"] = Response{ResponseCode: 221, ResponseMsg: "Name Already Exists"}
 	Responses["no_permission"] = Response{ResponseCode: 222, ResponseMsg: "No permissions"}
-
 
 	//Session
 	Responses["wrong_session"] = Response{ResponseCode: 240, ResponseMsg: "Wrong session ID"}

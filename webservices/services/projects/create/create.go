@@ -46,12 +46,15 @@ func (r ServiceDatabase) validate(project projects.Project) bool {
 func (r ServiceDatabase) addProject(project projects.Project) bool {
 	r.Dao.C("projects")
 
-	err := r.Dao.Collection.Insert(project)
+	project.ID = bson.NewObjectId()
+
+	err := r.Dao.Collection.Insert(&project)
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
 	}
 	core.SetResponse("project_created")
+	core.SetData(project.ID)
 	return true
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 type Board struct {
-	Id bson.ObjectId        `json:"id,omitempty" bson:"_id,omitempty"`
+	ID bson.ObjectId        `json:"id,omitempty" bson:"_id,omitempty"`
 	Name string             `json:"name" bson:"name,omitempty"`
 	Description string      `json:"description,omitempty" bson:"description,omitempty"`
 	ProjectID bson.ObjectId `json:"project,omitempty" bson:"project"`

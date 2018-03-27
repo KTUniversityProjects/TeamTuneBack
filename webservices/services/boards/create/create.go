@@ -77,12 +77,23 @@ func (r ServiceDatabase) getProject(board boards.Board, user bson.ObjectId)  pro
 func (r ServiceDatabase) addBoard(board boards.Board) bool {
 	r.Dao.C("boards")
 
-	err := r.Dao.Collection.Insert(board)
+	board.ID = bson.NewObjectId()
+
+	err := r.Dao.Collection.Insert(&board)
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
 	}
+
+	r.Dao.C("projects")
+	err = Database.Dao.Collection.Update(bson.M{"_id": board.ProjectID}, bson.M{"$push": bson.M{"boards" : bson.M{"_id" : board.ID}}})
+	if err != nil {
+		core.SetResponse("database_error")
+		return false
+	}
+
 	core.SetResponse("board_created")
+	core.SetData(board.ID)
 	return true
 }
 
