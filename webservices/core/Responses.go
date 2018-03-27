@@ -14,26 +14,33 @@ func loadResponses() {
 	Responses["database_error"] = Response{ResponseCode: 200, ResponseMsg: "Failed to make database query"}
 	Responses["decode_failure"] = Response{ResponseCode: 201, ResponseMsg: "Failed to decode Request data"}
 	Responses["no_response"] = Response{ResponseCode: 202, ResponseMsg: "No Response Return"}
+	Responses["system_mistake"] = Response{ResponseCode: 203, ResponseMsg: "Mistake in Web Service"}
 
-	//Request
+	//Request & validation
 	Responses["empty_fields"] = Response{ResponseCode: 220, ResponseMsg: "No Empty Fields"}
+	Responses["name_exists"] = Response{ResponseCode: 221, ResponseMsg: "Name Already Exists"}
+	Responses["no_permission"] = Response{ResponseCode: 222, ResponseMsg: "No permissions"}
+
 
 	//Session
 	Responses["wrong_session"] = Response{ResponseCode: 240, ResponseMsg: "Wrong session ID"}
 
-	//Projects module
-	Responses["project_exists"] = Response{ResponseCode: 260, ResponseMsg: "Name Already Exists"}
-
+	//Projects
 	Responses["project_created"] = Response{ResponseCode: 0, ResponseMsg: "Project Created"}
 	Responses["list_retrieved"] = Response{ResponseCode: 0, ResponseMsg: "List Retrieved"}
 
-	//Users module
-	Responses["username_exists"] = Response{ResponseCode: 280, ResponseMsg: "Username Already Exists"}
-	Responses["email_exists"] = Response{ResponseCode: 281, ResponseMsg: "Email Already Exists"}
-	Responses["password_match"] = Response{ResponseCode: 282, ResponseMsg: "Passwords do not match"}
-	Responses["wrong_credentials"] = Response{ResponseCode: 283, ResponseMsg: "Wrong username or Password"}
-	Responses["encryption_error"] = Response{ResponseCode: 284, ResponseMsg: "Failed to Encrypt password"}
+	//Users
+	Responses["username_exists"] = Response{ResponseCode: 260, ResponseMsg: "Username Already Exists"}
+	Responses["email_exists"] = Response{ResponseCode: 261, ResponseMsg: "Email Already Exists"}
+	Responses["password_match"] = Response{ResponseCode: 262, ResponseMsg: "Passwords do not match"}
+	Responses["wrong_credentials"] = Response{ResponseCode: 263, ResponseMsg: "Wrong username or Password"}
+	Responses["encryption_error"] = Response{ResponseCode: 264, ResponseMsg: "Failed to Encrypt password"}
 
 	Responses["user_created"] = Response{ResponseCode: 0, ResponseMsg: "User Created"}
 	Responses["logged_in"] = Response{ResponseCode: 0, ResponseMsg: "Logged In"}
+
+	//Boards
+	Responses["project_not_exists"] = Response{ResponseCode: 280, ResponseMsg: "Wrong Project ID"}
+
+	Responses["board_created"] = Response{ResponseCode: 0, ResponseMsg: "Board Created"}
 }

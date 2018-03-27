@@ -15,6 +15,7 @@ var Config = ConfigStruct{
 var MGOCollections = map[string]string{
 	"users":    "users",
 	"sessions": "sessions",
+	"boards":   "boards",
 	"projects": "projects"}
 
 

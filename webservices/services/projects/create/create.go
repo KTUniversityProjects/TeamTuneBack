@@ -24,7 +24,7 @@ func (r ServiceDatabase) checkFieldsExistance(project projects.Project) bool {
 		return false
 	}
 	if count > 0 {
-		core.SetResponse("project_exists")
+		core.SetResponse("name_exists")
 		return false
 	}
 	return true
