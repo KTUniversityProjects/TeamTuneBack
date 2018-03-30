@@ -21,11 +21,13 @@ func (r ServiceDatabase) checkCredentials(user users.User) (bool, bson.ObjectId)
 	var login = users.User{}
 	err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).Select(bson.M{"_id" :1, "password" : 1}).One(&login)
 	if err != nil {
-		core.SetResponse("database_error")
+		fmt.Println("Wrong username")
+		core.SetResponse("wrong_credentials")
 		return false, login.Id
 	}
 
 	if success := users.CheckPasswordHash(user.Password, login.Password); !success {
+		fmt.Println("Wrong password")
 		core.SetResponse("wrong_credentials")
 		return false, login.Id
 	}

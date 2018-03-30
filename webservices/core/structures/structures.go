@@ -7,7 +7,7 @@ import (
 
 type Session struct{
 	SessionID bson.ObjectId `json:"id" bson:"_id,omitempty"`
-	UserID bson.ObjectId `json:"user" bson:"user,omitempty"`
-	Expires time.Time `json:"expires" bson:"expires,omitempty"`
+	UserID bson.ObjectId `json:"user,omitempty" bson:"user,omitempty"`
+	Expires time.Time `json:"expires,omitempty" bson:"expires,omitempty"`
 }
 

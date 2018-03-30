@@ -61,9 +61,8 @@ func (r ServiceDatabase) getProject(board boards.Board, user bson.ObjectId)  pro
 
 	var project = projects.Project{}
 	err := Database.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": bson.M{"_id" : user}}}).One(&project)
-	fmt.Print(project)
 
-	if err != nil {
+	if err != nil || project.ID == ""{
 		core.SetResponse("project_not_exists")
 		return project
 	}
@@ -86,7 +85,7 @@ func (r ServiceDatabase) addBoard(board boards.Board) bool {
 	}
 
 	r.Dao.C("projects")
-	err = Database.Dao.Collection.Update(bson.M{"_id": board.ProjectID}, bson.M{"$push": bson.M{"boards" : bson.M{"_id" : board.ID}}})
+	err = Database.Dao.Collection.Update(bson.M{"_id": board.ProjectID}, bson.M{"$push": bson.M{"boards" : board.ID}})
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
