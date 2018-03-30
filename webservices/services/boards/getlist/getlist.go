@@ -5,7 +5,6 @@ import (
 	"../../../core"
 	"../../boards"
 	"gopkg.in/mgo.v2/bson"
-	"fmt"
 )
 
 type ServiceDatabase struct {
@@ -14,12 +13,12 @@ type ServiceDatabase struct {
 var Database = ServiceDatabase{&core.Dao}
 
 //Check if correct username and password
-func (r ServiceDatabase) getList(userID bson.ObjectId) bool {
-	r.Dao.C("projects")
+func (r ServiceDatabase) getList(projectID bson.ObjectId) bool {
+	r.Dao.C("boards")
 
-	var results []projects.Project
-	fmt.Println(bson.M{"users": bson.M{"_id":userID}})
-	err := Database.Dao.Collection.Find(bson.M{"users": bson.M{"$elemMatch":bson.M{"_id":userID}}}).Select(bson.M{"_id": 1, "name":1}).All(&results)
+	var results []boards.Board
+
+	err := Database.Dao.Collection.Find(bson.M{"project":projectID}).Select(bson.M{"_id": 1, "name":1}).All(&results)
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
@@ -68,7 +67,7 @@ func do(w http.ResponseWriter, r *http.Request) {
 		success,UserID := Database.Dao.CheckSession(data.Session)
 		if success {
 			if Database.CheckUser(data.ProjectID, UserID){
-				//Database.getList(UserID) //Adds project to database
+				Database.getList(UserID) //Adds project to database
 			}
 		}
 	}

@@ -22,7 +22,7 @@ func (r ServiceDatabase) addUser(user users.User) bool {
 		return false
 	}
 
-	err = r.Dao.Collection.Insert(&user)
+	err = r.Dao.Collection.Insert(bson.M{"username":user.Username, "password":user.Password, "email":user.Email})
 	if err != nil {
 		core.SetResponse("database_error")
 		return false
