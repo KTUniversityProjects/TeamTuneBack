@@ -6,7 +6,6 @@ import (
 	"../../projects"
 	"../../boards"
 	"gopkg.in/mgo.v2/bson"
-	"fmt"
 )
 
 type ServiceDatabase struct {
@@ -99,9 +98,7 @@ func (r ServiceDatabase) addBoard(board boards.Board) bool {
 
 //Connects to database and listens to port
 func main() {
-	Database.Dao.Connect(core.Config.DatabaseHost + ":" + core.Config.DatabasePort, core.Config.DatabaseName)
-	http.HandleFunc("/", do)
-	http.ListenAndServe(core.Config.Host + ":1335", nil)
+	core.Initialize(do, "1335")
 }
 
 func do(w http.ResponseWriter, r *http.Request) {

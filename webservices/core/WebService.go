@@ -14,6 +14,12 @@ func CORS(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 }
 
+func Initialize(function func(http.ResponseWriter, *http.Request), port string){
+	Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
+	http.HandleFunc("/", function)
+	http.ListenAndServe(Config.Host + ":" + port, nil)
+}
+
 //Decodes response to ,,item"
 func DecodeRequest(item interface{}, r *http.Request) bool {
 
