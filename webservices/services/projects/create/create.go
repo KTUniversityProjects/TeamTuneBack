@@ -67,7 +67,6 @@ func addProject(project projects.Project) {
 		core.ThrowResponse("database_error")
 	}
 	core.SetData(project.ID)
-	core.ThrowResponse("project_created")
 }
 
 
