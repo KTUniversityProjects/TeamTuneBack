@@ -23,7 +23,7 @@ func do() {
 
 
 //Adds User to Database
-func (r ServiceDatabase) addUser(user users.User) bool {
+func (r ServiceDatabase) addUser(user users.User) {
 	r.Dao.C("users")
 
 	var err error
@@ -39,45 +39,38 @@ func (r ServiceDatabase) addUser(user users.User) bool {
 }
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) checkFieldsExistance(user users.User) bool {
+func (r ServiceDatabase) checkFieldsExistance(user users.User) {
 	r.Dao.C("users")
 
 	count, err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).Count()
 	if err != nil {
 		core.ThrowResponse("database_error")
-		return false
 	}
 	if count > 0 {
 		core.ThrowResponse("username_exists")
-		return false
 	}
 
 	count, err = Database.Dao.Collection.Find(bson.M{"email": user.Email}).Count()
 	if err != nil {
 		core.ThrowResponse("database_error")
-		return false
 	}
 	if count > 0 {
 		core.ThrowResponse("email_exists")
-		return false
 	}
-	return true
 }
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) validate(user users.User) bool {
+func (r ServiceDatabase) validate(user users.User) {
 
 	if user.Username == "" || user.Password == "" || user.Email == "" {
 		core.ThrowResponse("empty_fields")
-		return false
 	}
 
 	if  user.Password2 != user.Password {
 		core.ThrowResponse("password_match")
-		return false
 	}
 
-	return Database.checkFieldsExistance(user)
+	Database.checkFieldsExistance(user)
 }
 
 
