@@ -16,20 +16,20 @@ func do() {
 	core.DecodeRequest(&data)
 
 	//Gets user
-	UserID := Database.Dao.CheckSession(data.Session)
+	UserID := core.Dao.CheckSession(data.Session)
 
 	//Gets all projects
-	Database.getList(UserID)
+	getList(UserID)
 }
 
 
 //Check if correct username and password
-func (r ServiceDatabase) getList(userID bson.ObjectId)  {
-	r.Dao.C("projects")
+func getList(userID bson.ObjectId)  {
+	core.Dao.C("projects")
 
 	var results []projects.Project
 
-	err := Database.Dao.Collection.Find(bson.M{"users": bson.M{"$elemMatch":bson.M{"_id":userID}}}).Select(bson.M{"_id": 1, "name":1}).All(&results)
+	err := core.Dao.Collection.Find(bson.M{"users": bson.M{"$elemMatch":bson.M{"_id":userID}}}).Select(bson.M{"_id": 1, "name":1}).All(&results)
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
@@ -39,15 +39,7 @@ func (r ServiceDatabase) getList(userID bson.ObjectId)  {
 }
 
 
-
 /*           Every Webservice             */
-type ServiceDatabase struct {
-	Dao *core.MongoDatabase
-}
-
-var Database = ServiceDatabase{&core.Dao}
-
-//Connects to database and listens to port
 func main() {
 	core.Initialize(do, servicePort)
 }

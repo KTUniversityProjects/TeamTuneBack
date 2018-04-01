@@ -15,7 +15,7 @@ func do() {
 	core.DecodeRequest(&data)
 
 	//Gets user
-	user := Database.Dao.CheckSession(data.Session)
+	user := core.Dao.CheckSession(data.Session)
 
 	//sets user as creator
 	data.Project.Users = []projects.ProjectUser{
@@ -26,17 +26,17 @@ func do() {
 	}
 
 	//validates
-	Database.validate(data.Project)
+	validate(data.Project)
 
 	//Adds project to database
-	Database.addProject(data.Project)
+	addProject(data.Project)
 }
 
 
-func (r ServiceDatabase) checkFieldsExistance(project projects.Project) {
-	r.Dao.C("projects")
+func  checkFieldsExistance(project projects.Project) {
+	core.Dao.C("projects")
 
-	count, err := Database.Dao.Collection.Find(bson.M{"name": project.Name, "users": bson.M{"$elemMatch": project.Users[0]}}).Count()
+	count, err := core.Dao.Collection.Find(bson.M{"name": project.Name, "users": bson.M{"$elemMatch": project.Users[0]}}).Count()
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
@@ -45,23 +45,23 @@ func (r ServiceDatabase) checkFieldsExistance(project projects.Project) {
 	}
 }
 
-func (r ServiceDatabase) validate(project projects.Project) {
+func validate(project projects.Project) {
 
 	if project.Name == ""{
 		core.ThrowResponse("empty_fields")
 	}
 
-	Database.checkFieldsExistance(project)
+	checkFieldsExistance(project)
 }
 
 
 //Adds Project to Database
-func (r ServiceDatabase) addProject(project projects.Project) {
-	r.Dao.C("projects")
+func addProject(project projects.Project) {
+	core.Dao.C("projects")
 
 	project.ID = bson.NewObjectId()
 
-	err := r.Dao.Collection.Insert(&project)
+	err := core.Dao.Collection.Insert(&project)
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
@@ -71,13 +71,6 @@ func (r ServiceDatabase) addProject(project projects.Project) {
 
 
 /*           Every Webservice             */
-type ServiceDatabase struct {
-	Dao *core.MongoDatabase
-}
-
-var Database = ServiceDatabase{&core.Dao}
-
-//Connects to database and listens to port
 func main() {
 	core.Initialize(do, servicePort)
 }

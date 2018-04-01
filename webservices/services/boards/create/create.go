@@ -17,24 +17,24 @@ func do() {
 	core.DecodeRequest(&data)
 
 	//Gets user
-	user := Database.Dao.CheckSession(data.Session)
+	user := core.Dao.CheckSession(data.Session)
 
 	//gets project
-	project := Database.getProject(data.Board, user)
+	project := getProject(data.Board, user)
 
 	//validates
-	Database.validate(data.Board, project)
+	validate(data.Board, project)
 
 	//Adds project to database
-	Database.addBoard(data.Board)
+	addBoard(data.Board)
 }
 
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) checkFieldsExistance(board boards.Board) {
-	r.Dao.C("projects")
+func checkFieldsExistance(board boards.Board) {
+	core.Dao.C("projects")
 
-	count, err := Database.Dao.Collection.Find(bson.M{"name": board.Name, "project": board.ProjectID}).Count()
+	count, err := core.Dao.Collection.Find(bson.M{"name": board.Name, "project": board.ProjectID}).Count()
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
@@ -44,7 +44,7 @@ func (r ServiceDatabase) checkFieldsExistance(board boards.Board) {
 }
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) validate(board boards.Board, project projects.Project) {
+func validate(board boards.Board, project projects.Project) {
 
 	if board.Name == ""{
 		core.ThrowResponse("empty_fields")
@@ -60,15 +60,15 @@ func (r ServiceDatabase) validate(board boards.Board, project projects.Project) 
 		core.ThrowResponse("system_mistake")
 	}
 
-	Database.checkFieldsExistance(board)
+	checkFieldsExistance(board)
 }
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) getProject(board boards.Board, user bson.ObjectId)  projects.Project {
-	Database.Dao.C("projects")
+func getProject(board boards.Board, user bson.ObjectId)  projects.Project {
+	core.Dao.C("projects")
 
 	var project = projects.Project{}
-	err := Database.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": bson.M{"_id" : user}}}).One(&project)
+	err := core.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": bson.M{"_id" : user}}}).One(&project)
 
 	if err != nil || project.ID == ""{
 		core.ThrowResponse("project_not_exists")
@@ -80,18 +80,18 @@ func (r ServiceDatabase) getProject(board boards.Board, user bson.ObjectId)  pro
 
 
 //Adds Board to Database
-func (r ServiceDatabase) addBoard(board boards.Board) {
-	r.Dao.C("boards")
+func addBoard(board boards.Board) {
+	core.Dao.C("boards")
 
 	board.ID = bson.NewObjectId()
 
-	err := r.Dao.Collection.Insert(&board)
+	err := core.Dao.Collection.Insert(&board)
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
 
-	r.Dao.C("projects")
-	err = Database.Dao.Collection.Update(bson.M{"_id": board.ProjectID}, bson.M{"$push": bson.M{"boards" : board.ID}})
+	core.Dao.C("projects")
+	err = core.Dao.Collection.Update(bson.M{"_id": board.ProjectID}, bson.M{"$push": bson.M{"boards" : board.ID}})
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
@@ -101,13 +101,6 @@ func (r ServiceDatabase) addBoard(board boards.Board) {
 }
 
 /*           Every Webservice             */
-type ServiceDatabase struct {
-	Dao *core.MongoDatabase
-}
-
-var Database = ServiceDatabase{&core.Dao}
-
-//Connects to database and listens to port
 func main() {
 	core.Initialize(do, servicePort)
 }

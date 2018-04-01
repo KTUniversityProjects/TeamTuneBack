@@ -64,13 +64,6 @@ func (r ServiceDatabase) CreateSession(user users.User, userID bson.ObjectId) {
 
 
 /*           Every Webservice             */
-type ServiceDatabase struct {
-	Dao *core.MongoDatabase
-}
-
-var Database = ServiceDatabase{&core.Dao}
-
-//Connects to database and listens to port
 func main() {
 	core.Initialize(do, servicePort)
 }

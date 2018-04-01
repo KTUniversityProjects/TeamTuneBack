@@ -15,16 +15,16 @@ func do() {
 	core.DecodeRequest(&data)
 
 	//Validates register data
-	Database.validate(data)
+	validate(data)
 
 	//Adds user to database
-	Database.addUser(data)
+	addUser(data)
 }
 
 
 //Adds User to Database
-func (r ServiceDatabase) addUser(user users.User) {
-	r.Dao.C("users")
+func addUser(user users.User) {
+	core.Dao.C("users")
 
 	var err error
 	user.Password,err = users.EncryptPassword(user.Password)
@@ -32,17 +32,17 @@ func (r ServiceDatabase) addUser(user users.User) {
 		core.ThrowResponse("encryption_error")
 	}
 
-	err = r.Dao.Collection.Insert(bson.M{"username":user.Username, "password":user.Password, "email":user.Email})
+	err = core.Dao.Collection.Insert(bson.M{"username":user.Username, "password":user.Password, "email":user.Email})
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
 }
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) checkFieldsExistance(user users.User) {
-	r.Dao.C("users")
+func checkFieldsExistance(user users.User) {
+	core.Dao.C("users")
 
-	count, err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).Count()
+	count, err := core.Dao.Collection.Find(bson.M{"username": user.Username}).Count()
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
@@ -50,7 +50,7 @@ func (r ServiceDatabase) checkFieldsExistance(user users.User) {
 		core.ThrowResponse("username_exists")
 	}
 
-	count, err = Database.Dao.Collection.Find(bson.M{"email": user.Email}).Count()
+	count, err = core.Dao.Collection.Find(bson.M{"email": user.Email}).Count()
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
@@ -60,7 +60,7 @@ func (r ServiceDatabase) checkFieldsExistance(user users.User) {
 }
 
 //Checks if User and Email does not exists in Database
-func (r ServiceDatabase) validate(user users.User) {
+func validate(user users.User) {
 
 	if user.Username == "" || user.Password == "" || user.Email == "" {
 		core.ThrowResponse("empty_fields")
@@ -70,18 +70,11 @@ func (r ServiceDatabase) validate(user users.User) {
 		core.ThrowResponse("password_match")
 	}
 
-	Database.checkFieldsExistance(user)
+	checkFieldsExistance(user)
 }
 
 
 /*           Every Webservice             */
-type ServiceDatabase struct {
-	Dao *core.MongoDatabase
-}
-
-var Database = ServiceDatabase{&core.Dao}
-
-//Connects to database and listens to port
 func main() {
 	core.Initialize(do, servicePort)
 }
