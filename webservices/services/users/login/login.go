@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"../../../core"
 	"../../../core/structures"
 	"gopkg.in/mgo.v2/bson"
@@ -10,33 +9,42 @@ import (
 	"fmt"
 )
 
-type ServiceDatabase struct {
-	Dao *core.MongoDatabase
+var servicePort = "1338"
+
+func do() {
+
+	//Parses request data to
+	var data users.User
+	core.DecodeRequest(&data)
+
+	//Credentials check
+	userID := Database.checkCredentials(data)
+
+	//Creating session
+	Database.CreateSession(data, bson.ObjectId(userID)) //Logs in
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) checkCredentials(user users.User) (bool, bson.ObjectId) {
+func (r ServiceDatabase) checkCredentials(user users.User) (bson.ObjectId) {
 	r.Dao.C("users")
 
 	var login = users.User{}
 	err := Database.Dao.Collection.Find(bson.M{"username": user.Username}).Select(bson.M{"_id" :1, "password" : 1}).One(&login)
 	if err != nil {
 		fmt.Println("Wrong username")
-		core.SetResponse("wrong_credentials")
-		return false, login.Id
+		core.ThrowResponse("wrong_credentials")
 	}
 
 	if success := users.CheckPasswordHash(user.Password, login.Password); !success {
 		fmt.Println("Wrong password")
-		core.SetResponse("wrong_credentials")
-		return false, login.Id
+		core.ThrowResponse("wrong_credentials")
 	}
 
-	return true, login.Id
+	return login.Id
 }
 
 //Check if correct username and password
-func (r ServiceDatabase) CreateSession(user users.User, userID bson.ObjectId) bool {
+func (r ServiceDatabase) CreateSession(user users.User, userID bson.ObjectId) {
 	r.Dao.C("sessions")
 	i := bson.NewObjectId()
 
@@ -48,35 +56,21 @@ func (r ServiceDatabase) CreateSession(user users.User, userID bson.ObjectId) bo
 	//Database insert
 	err := r.Dao.Collection.Insert(&session)
 	if err != nil {
-		core.SetResponse("database_error")
-		return false
+		core.ThrowResponse("database_error")
 	}
 
-	core.SetResponse("logged_in")
 	core.SetData(i)
+}
 
-	return true
+
+/*           Every Webservice             */
+type ServiceDatabase struct {
+	Dao *core.MongoDatabase
 }
 
 var Database = ServiceDatabase{&core.Dao}
 
 //Connects to database and listens to port
 func main() {
-	core.Initialize(do, "1338")
-}
-
-func do(w http.ResponseWriter, r *http.Request) {
-	core.CORS(w)
-
-	//Parses request data to
-	var data users.User
-	if core.DecodeRequest(&data, r){
-		//Checks Username and Email
-		if success, userID := Database.checkCredentials(data); success {
-			Database.CreateSession(data, bson.ObjectId(userID)) //Logs in
-		}
-	}
-
-	//Prints R
-	core.PrintReponse(w)
+	core.Initialize(do, servicePort)
 }

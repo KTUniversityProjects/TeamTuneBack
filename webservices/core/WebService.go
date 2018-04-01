@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-var P = Response{ResponseCode: 201, ResponseMsg: "No Response Returned"}
+var P Response
 
 //Adds CORS header to response Writer
 func CORS(w http.ResponseWriter) {
@@ -14,54 +14,60 @@ func CORS(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 }
 
-func Initialize(function func(http.ResponseWriter, *http.Request), port string){
+var dofunc func()
+var currentRequest *http.Request
+
+func Initialize(function func(), port string){
+	loadResponses()
+	dofunc = function
 	Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
-	http.HandleFunc("/", function)
+	http.HandleFunc("/", requestFunc)
 	http.ListenAndServe(Config.Host + ":" + port, nil)
 }
 
-//Decodes response to ,,item"
-func DecodeRequest(item interface{}, r *http.Request) bool {
+func requestFunc(w http.ResponseWriter, r *http.Request){
+	CORS(w)
+	currentRequest = r
+	P = Response{ResponseCode: 0, ResponseMsg: "Success"}
+	defer PrintReponse(w)
+	dofunc()
+}
 
-	decoder := json.NewDecoder(r.Body)
+//Decodes response to ,,item"
+func DecodeRequest(item interface{}) {
+	
+	decoder := json.NewDecoder(currentRequest.Body)
 	err := decoder.Decode(&item)
 	if err != nil {
-		SetResponse("decode_failure")
-		return false
+		ThrowResponse("decode_failure")
 	}
 
-	defer r.Body.Close()
-	return true
+	defer currentRequest.Body.Close()
 }
 
 //Prints generated Response
 func PrintReponse(w http.ResponseWriter) {
 	result, err := json.MarshalIndent(P, "", "  ")
 	if err != nil {
-		SetResponse("parse_error")
+		ThrowResponse("parse_error")
+		return
 	}
 	fmt.Fprintf(w, string(result))
-}
-
-//Sets Response by ID (From Errors.go file)
-func SetResponse(ID string) {
-	if len(Responses) == 0 {
-		loadResponses()
-	}
-	if _, ok := Responses[ID]; ok {
-		P = Responses[ID]
-	} else {
-		panic("WRONG ERROR ID  - " + ID)
-	}
+	recover()
 }
 
 //Sets Response by ID (From Errors.go file)
 func SetData(data interface{}) {
 	P.ReturnData = data
+	panic(nil)
 }
 
 //Find out if this might be possible
-func ThrowResponse(ErrorID string, w http.ResponseWriter) {
-	SetResponse(ErrorID)
-	PrintReponse(w)
+func ThrowResponse(ID string) {
+	if _, ok := Responses[ID]; ok {
+		P = Responses[ID]
+		panic(nil)
+	} else {
+		panic("WRONG ERROR ID  - " + ID)
+	}
 }

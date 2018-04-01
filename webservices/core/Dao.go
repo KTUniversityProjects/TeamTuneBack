@@ -41,21 +41,19 @@ func (r *MongoDatabase) Connect(host string, databaseName string){
 }
 
 //Method for connection
-func (r *MongoDatabase) CheckSession(session structures.Session) (bool, bson.ObjectId){
+func (r *MongoDatabase) CheckSession(session structures.Session) (bson.ObjectId){
 	r.C("sessions")
 
 	err := r.Collection.Find(bson.M{"_id":session.SessionID, "expires" : bson.M{"$gt": time.Now()}}).One(&session)
 	if err != nil {
-		SetResponse("wrong_session")
-		return false, session.UserID
+		ThrowResponse("wrong_session")
 	}
 
 	err = r.Collection.Update(bson.M{"_id":session.SessionID}, bson.M{"$set": bson.M{"expires" : time.Now().Add(time.Duration(24*time.Hour))}})
 	if err != nil {
-		SetResponse("database_error")
-		return true, session.UserID
+		ThrowResponse("database_error")
 	}
 
-	return true, session.UserID
+	return session.UserID
 }
 

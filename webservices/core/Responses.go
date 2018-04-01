@@ -14,8 +14,7 @@ func loadResponses() {
 	//System
 	Responses["database_error"] = Response{ResponseCode: 200, ResponseMsg: "Failed to make database query"}
 	Responses["decode_failure"] = Response{ResponseCode: 201, ResponseMsg: "Failed to decode Request data"}
-	Responses["no_response"] = Response{ResponseCode: 202, ResponseMsg: "No Response Return"}
-	Responses["system_mistake"] = Response{ResponseCode: 203, ResponseMsg: "Mistake in Web Service"}
+	Responses["system_mistake"] = Response{ResponseCode: 202, ResponseMsg: "Mistake in Web Service"}
 
 	//Request & validation
 	Responses["empty_fields"] = Response{ResponseCode: 220, ResponseMsg: "No Empty Fields"}
@@ -26,8 +25,7 @@ func loadResponses() {
 	Responses["wrong_session"] = Response{ResponseCode: 240, ResponseMsg: "Wrong session ID"}
 
 	//Projects
-	Responses["project_created"] = Response{ResponseCode: 0, ResponseMsg: "Project Created"}
-	Responses["list_retrieved"] = Response{ResponseCode: 0, ResponseMsg: "List Retrieved"}
+	Responses["project_not_exists"] = Response{ResponseCode: 250, ResponseMsg: "Project does not exists"}
 
 	//Users
 	Responses["username_exists"] = Response{ResponseCode: 260, ResponseMsg: "Username Already Exists"}
@@ -36,11 +34,6 @@ func loadResponses() {
 	Responses["wrong_credentials"] = Response{ResponseCode: 263, ResponseMsg: "Wrong username or Password"}
 	Responses["encryption_error"] = Response{ResponseCode: 264, ResponseMsg: "Failed to Encrypt password"}
 
-	Responses["user_created"] = Response{ResponseCode: 0, ResponseMsg: "User Created"}
-	Responses["logged_in"] = Response{ResponseCode: 0, ResponseMsg: "Logged In"}
-
 	//Boards
 	Responses["project_not_exists"] = Response{ResponseCode: 280, ResponseMsg: "Wrong Project ID"}
-
-	Responses["board_created"] = Response{ResponseCode: 0, ResponseMsg: "Board Created"}
 }

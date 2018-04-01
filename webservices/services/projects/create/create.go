@@ -1,90 +1,83 @@
 package main
 
 import (
-	"net/http"
 	"../../../core"
 	"../../projects"
 	"gopkg.in/mgo.v2/bson"
 )
 
-type ServiceDatabase struct {
-	Dao *core.MongoDatabase
+var servicePort = "1336"
+
+func do() {
+
+	//Parses request data to
+	var data projects.ProjectRequest
+	core.DecodeRequest(&data)
+
+	//Gets user
+	user := Database.Dao.CheckSession(data.Session)
+
+	//sets user as creator
+	data.Project.Users = []projects.ProjectUser{
+		{
+			ID:      user,
+			Creator: true,
+		},
+	}
+
+	//validates
+	Database.validate(data.Project)
+
+	//Adds project to database
+	Database.addProject(data.Project)
 }
-var Database = ServiceDatabase{&core.Dao}
 
 
-
-//Checks if User and Email does not exists in Database
-func (r ServiceDatabase) checkFieldsExistance(project projects.Project) bool {
+func (r ServiceDatabase) checkFieldsExistance(project projects.Project) {
 	r.Dao.C("projects")
 
-	count, err := Database.Dao.Collection.Find(bson.M{"name": project.Name, "user": project.Users[0]}).Count()
+	count, err := Database.Dao.Collection.Find(bson.M{"name": project.Name, "users": bson.M{"$elemMatch": project.Users[0]}}).Count()
 	if err != nil {
-		core.SetResponse("database_error")
-		return false
+		core.ThrowResponse("database_error")
 	}
 	if count > 0 {
-		core.SetResponse("name_exists")
-		return false
+		core.ThrowResponse("name_exists")
 	}
-	return true
 }
 
-//Checks if User and Email does not exists in Database
-func (r ServiceDatabase) validate(project projects.Project) bool {
+func (r ServiceDatabase) validate(project projects.Project) {
 
 	if project.Name == ""{
-		core.SetResponse("empty_fields")
-		return false
+		core.ThrowResponse("empty_fields")
 	}
 
-	return Database.checkFieldsExistance(project)
+	Database.checkFieldsExistance(project)
 }
 
 
-//Adds User to Database
-func (r ServiceDatabase) addProject(project projects.Project) bool {
+//Adds Project to Database
+func (r ServiceDatabase) addProject(project projects.Project) {
 	r.Dao.C("projects")
 
 	project.ID = bson.NewObjectId()
 
 	err := r.Dao.Collection.Insert(&project)
 	if err != nil {
-		core.SetResponse("database_error")
-		return false
+		core.ThrowResponse("database_error")
 	}
-	core.SetResponse("project_created")
 	core.SetData(project.ID)
-	return true
+	core.ThrowResponse("project_created")
 }
 
+
+/*           Every Webservice             */
+type ServiceDatabase struct {
+	Dao *core.MongoDatabase
+}
+
+var Database = ServiceDatabase{&core.Dao}
 
 //Connects to database and listens to port
 func main() {
-	core.Initialize(do, "1336")
-}
-
-func do(w http.ResponseWriter, r *http.Request) {
-	core.CORS(w)
-
-	//Parses request data to
-	var data projects.ProjectCreation
-	if core.DecodeRequest(&data, r){
-
-		success,user := Database.Dao.CheckSession(data.Session)
-		if success {
-			data.Project.Users = []projects.ProjectUser{
-				{
-					ID:user,
-					Creator:true,
-				},
-			}
-			if Database.validate(data.Project) {
-				Database.addProject(data.Project) //Adds project to database
-			}
-		}
-	}
-
-	//Prints R
-	core.PrintReponse(w)
+	core.Initialize(do, servicePort)
 }
