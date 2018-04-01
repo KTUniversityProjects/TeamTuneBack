@@ -6,6 +6,14 @@ import (
 	"fmt"
 )
 
+func Initialize(function func(), port string){
+	loadResponses()
+	dofunc = function
+	Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
+	http.HandleFunc("/", requestFunc)
+	http.ListenAndServe(Config.Host + ":" + port, nil)
+}
+
 var P Response
 
 //Adds CORS header to response Writer
@@ -16,14 +24,6 @@ func CORS(w http.ResponseWriter) {
 
 var dofunc func()
 var currentRequest *http.Request
-
-func Initialize(function func(), port string){
-	loadResponses()
-	dofunc = function
-	Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
-	http.HandleFunc("/", requestFunc)
-	http.ListenAndServe(Config.Host + ":" + port, nil)
-}
 
 func requestFunc(w http.ResponseWriter, r *http.Request){
 	CORS(w)

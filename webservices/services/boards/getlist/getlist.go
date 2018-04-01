@@ -43,7 +43,7 @@ func getList(projectID bson.ObjectId) {
 
 
 //Check if user can see project
-func  CheckUser(projectID bson.ObjectId, userID bson.ObjectId) {
+func CheckUser(projectID bson.ObjectId, userID bson.ObjectId) {
 	core.Dao.C("projects")
 
 	count,err := core.Dao.Collection.Find(bson.M{"_id":projectID,"users":bson.M{"$elemMatch":bson.M{"_id":userID}}}).Count()
