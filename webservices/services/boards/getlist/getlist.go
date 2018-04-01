@@ -15,6 +15,7 @@ func do() {
 	var data boards.BoardListRequest
 	core.DecodeRequest(&data)
 
+	//Session check
 	UserID := core.Dao.CheckSession(data.Session)
 
 	//Checks user
@@ -25,7 +26,7 @@ func do() {
 
 }
 
-//Check if correct username and password
+//gets board list by ProjectID
 func getList(projectID bson.ObjectId) {
 	core.Dao.C("boards")
 
@@ -41,7 +42,7 @@ func getList(projectID bson.ObjectId) {
 
 
 
-//Check if correct username and password
+//Check if user can see project
 func  CheckUser(projectID bson.ObjectId, userID bson.ObjectId) {
 	core.Dao.C("projects")
 

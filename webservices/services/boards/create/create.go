@@ -30,7 +30,7 @@ func do() {
 }
 
 
-//Checks if User and Email does not exists in Database
+//Checks board existance for project
 func checkFieldsExistance(board boards.Board) {
 	core.Dao.C("projects")
 
@@ -43,7 +43,7 @@ func checkFieldsExistance(board boards.Board) {
 	}
 }
 
-//Checks if User and Email does not exists in Database
+//Validates BOard data
 func validate(board boards.Board, project projects.Project) {
 
 	if board.Name == ""{
@@ -63,7 +63,7 @@ func validate(board boards.Board, project projects.Project) {
 	checkFieldsExistance(board)
 }
 
-//Checks if User and Email does not exists in Database
+//Gets project for board creation
 func getProject(board boards.Board, user bson.ObjectId)  projects.Project {
 	core.Dao.C("projects")
 

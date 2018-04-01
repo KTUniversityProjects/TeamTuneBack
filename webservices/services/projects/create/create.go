@@ -32,7 +32,7 @@ func do() {
 	addProject(data.Project)
 }
 
-
+//Chech Project existance for User
 func  checkFieldsExistance(project projects.Project) {
 	core.Dao.C("projects")
 
@@ -45,6 +45,7 @@ func  checkFieldsExistance(project projects.Project) {
 	}
 }
 
+//Validates project Data
 func validate(project projects.Project) {
 
 	if project.Name == ""{

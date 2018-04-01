@@ -15,7 +15,7 @@ func do() {
 	var data projects.ProjectRequest
 	core.DecodeRequest(&data)
 
-	//Gets user
+	//Gets userID
 	UserID := core.Dao.CheckSession(data.Session)
 
 	//Gets all projects
@@ -23,7 +23,7 @@ func do() {
 }
 
 
-//Check if correct username and password
+//Gets projects list by userID
 func getList(userID bson.ObjectId)  {
 	core.Dao.C("projects")
 

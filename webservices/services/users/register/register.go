@@ -59,7 +59,7 @@ func checkFieldsExistance(user users.User) {
 	}
 }
 
-//Checks if User and Email does not exists in Database
+//Validates form fields
 func validate(user users.User) {
 
 	if user.Username == "" || user.Password == "" || user.Email == "" {
