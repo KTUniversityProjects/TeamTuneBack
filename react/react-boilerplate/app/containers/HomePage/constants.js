@@ -10,3 +10,4 @@
  */
 
 export const CHANGE_USERNAME = 'boilerplate/Home/CHANGE_USERNAME';
+export const CHANGE_PASSWORD = 'boilerplate/Home/CHANGE_PASSWORD';

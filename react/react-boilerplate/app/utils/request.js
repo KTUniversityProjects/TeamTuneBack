@@ -11,8 +11,10 @@ function parseJSON(response) {
   if (response.status === 204 || response.status === 205) {
     return null;
   }
+
   return response.json();
 }
+
 
 /**
  * Checks if a network request came back fine, and throws an error if not
@@ -39,8 +41,16 @@ function checkStatus(response) {
  *
  * @return {object}           The response data
  */
-export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON);
+export default function request(url, payload = {}) {
+
+  console.log(payload);
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  }).then(checkStatus)
+    .then(parseJSON)
 }

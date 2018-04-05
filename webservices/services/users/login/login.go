@@ -35,7 +35,7 @@ func  checkCredentials(user users.User) (bson.ObjectId) {
 		core.ThrowResponse("wrong_credentials")
 	}
 
-	if success := users.CheckPasswordHash(user.Password, login.Password); !success {
+	if !users.CheckPasswordHash(user.Password, login.Password) {
 		fmt.Println("Wrong password")
 		core.ThrowResponse("wrong_credentials")
 	}

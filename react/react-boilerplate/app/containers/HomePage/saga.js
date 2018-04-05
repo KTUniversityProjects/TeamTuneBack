@@ -8,6 +8,7 @@ import { reposLoaded, repoLoadingError } from 'containers/App/actions';
 
 import request from 'utils/request';
 import { makeSelectUsername } from 'containers/HomePage/selectors';
+import { makeSelectPassword } from 'containers/HomePage/selectors';
 
 /**
  * Github repos request/response handler
@@ -15,11 +16,12 @@ import { makeSelectUsername } from 'containers/HomePage/selectors';
 export function* getRepos() {
   // Select username from store
   const username = yield select(makeSelectUsername());
-  const requestURL = `https://api.github.com/users/${username}/repos?type=all&sort=updated`;
+  const password = yield select(makeSelectPassword());
+  const requestURL = `http://localhost:1338`;
 
   try {
     // Call our request helper (see 'utils/request')
-    const repos = yield call(request, requestURL);
+    const repos = yield call(request, requestURL, {username:username, password:password});
     yield put(reposLoaded(repos, username));
   } catch (err) {
     yield put(repoLoadingError(err));

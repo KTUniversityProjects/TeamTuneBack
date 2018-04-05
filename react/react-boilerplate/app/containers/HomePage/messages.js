@@ -8,7 +8,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   startProjectHeader: {
     id: 'boilerplate.containers.HomePage.start_project.header',
-    defaultMessage: 'Start your next react project in seconds',
+    defaultMessage: 'Create Your project with TeamTune!',
   },
   startProjectMessage: {
     id: 'boilerplate.containers.HomePage.start_project.message',
@@ -25,5 +25,9 @@ export default defineMessages({
   trymeAtPrefix: {
     id: 'boilerplate.containers.HomePage.tryme.atPrefix',
     defaultMessage: '@',
+  },
+  passwordHolder: {
+    id: 'boilerplate.containers.HomePage.tryme.passwordHolder',
+    defaultMessage: 'Password',
   },
 });

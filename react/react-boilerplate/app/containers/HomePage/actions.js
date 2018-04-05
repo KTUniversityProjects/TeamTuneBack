@@ -17,6 +17,7 @@
 
 import {
   CHANGE_USERNAME,
+  CHANGE_PASSWORD,
 } from './constants';
 
 /**
@@ -29,6 +30,12 @@ import {
 export function changeUsername(name) {
   return {
     type: CHANGE_USERNAME,
+    name,
+  };
+}
+export function changePassword(name) {
+  return {
+    type: CHANGE_PASSWORD,
     name,
   };
 }
