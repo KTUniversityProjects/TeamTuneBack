@@ -3,28 +3,28 @@
  */
 
 import { call, put, select, takeLatest } from 'redux-saga/effects';
-import { LOAD_REPOS } from 'containers/App/constants';
-import { reposLoaded, repoLoadingError } from 'containers/App/actions';
 
 import request from 'utils/request';
-import { makeSelectUsername } from 'containers/HomePage/selectors';
-import { makeSelectPassword } from 'containers/HomePage/selectors';
+import {makeSelectPassword, makeSelectUsername} from 'containers/HomePage/selectors';
+import {LOGIN} from "../App/constants";
+import {loginSuccess, requestError} from "../App/actions";
 
 /**
- * Github repos request/response handler
+ * Login request handler
  */
-export function* getRepos() {
-  // Select username from store
+export function* loginRequest() {
+
+  // Select username and password from store
   const username = yield select(makeSelectUsername());
   const password = yield select(makeSelectPassword());
   const requestURL = `http://localhost:1338`;
 
   try {
     // Call our request helper (see 'utils/request')
-    const repos = yield call(request, requestURL, {username:username, password:password});
-    yield put(reposLoaded(repos, username));
+    const response = yield call(request, requestURL, {username: username, password: password});
+    yield put(loginSuccess(response));
   } catch (err) {
-    yield put(repoLoadingError(err));
+    yield put(requestError(err));
   }
 }
 
@@ -36,5 +36,5 @@ export default function* githubData() {
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
   // It will be cancelled automatically on component unmount
-  yield takeLatest(LOAD_REPOS, getRepos);
+  yield takeLatest(LOGIN, loginRequest);
 }

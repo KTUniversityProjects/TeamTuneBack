@@ -14,14 +14,13 @@ import { createStructuredSelector } from 'reselect';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { makeSelectLoading, makeSelectError } from 'containers/App/selectors';
 import H2 from 'components/H2';
 import CenteredSection from './CenteredSection';
 import Form from './Form';
 import Input from './Input';
 import Section from './Section';
 import messages from './messages';
-import { loadRepos } from '../App/actions';
+import { login } from '../App/actions';
 import { changeUsername } from './actions';
 import { changePassword } from './actions';
 import { makeSelectUsername } from './selectors';
@@ -82,11 +81,6 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
 }
 
 HomePage.propTypes = {
-  loading: PropTypes.bool,
-  error: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.bool,
-  ]),
   onSubmitForm: PropTypes.func,
   username: PropTypes.string,
   password: PropTypes.string,
@@ -100,7 +94,7 @@ export function mapDispatchToProps(dispatch) {
     onChangePassword: (evt) => dispatch(changePassword(evt.target.value)),
     onSubmitForm: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(loadRepos());
+      dispatch(login());
     },
   };
 }
@@ -108,8 +102,6 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   username: makeSelectUsername(),
   password: makeSelectPassword(),
-  loading: makeSelectLoading(),
-  error: makeSelectError(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

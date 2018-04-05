@@ -42,8 +42,6 @@ function checkStatus(response) {
  * @return {object}           The response data
  */
 export default function request(url, payload = {}) {
-
-  console.log(payload);
   return fetch(url, {
     method: 'POST',
     headers: {
@@ -51,6 +49,5 @@ export default function request(url, payload = {}) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
-  }).then(checkStatus)
-    .then(parseJSON)
+  }).then(checkStatus).then(parseJSON)
 }
