@@ -5,7 +5,7 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 
 import request from 'utils/request';
-import {makeSelectPassword, makeSelectUsername} from 'containers/LoginPage/selectors';
+import {makeSelectPassword, makeSelectUsername} from 'containers/LogInPage/selectors';
 import {LOGIN} from "../App/constants";
 import {loginSuccess, requestError} from "../App/actions";
 
