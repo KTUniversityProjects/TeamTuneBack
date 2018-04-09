@@ -1,9 +1,3 @@
-diff git a/react/reactboilerplate/app/containers/App/reducer.js b/react/reactboilerplate/app/containers/App/reducer.js
-deleted file mode 100644
-index 34af859..0000000
- a/react/reactboilerplate/app/containers/App/reducer.js
-+++ /dev/null
-@@ 1,55 +0,0 @@
 /*
  * AppReducer
  *
@@ -25,12 +19,7 @@ import {
 
 // The initial state of the App
 const initialState = fromJS({
-  loading: false,
-  error: false,
-  currentUser: false,
-  userData: {
-    repositories: false,
-  },
+
 });
 
 function appReducer(state = initialState, action) {
@@ -38,7 +27,7 @@ function appReducer(state = initialState, action) {
 
     //Login request success
     case LOGIN_SUCCESS:
-      console.log(action.response.message);
+      console.log(action.response);
       if(action.response.code == 0)
       {
          sessionStorage.setItem('sessionID', action.response.data);

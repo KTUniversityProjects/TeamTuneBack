@@ -32,4 +32,5 @@ export function* loginRequest() {
  * Root saga manages watcher lifecycle
  */
 export default function* checkLoginState() {
+  yield takeLatest(LOGIN, loginRequest);
 }
