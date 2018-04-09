@@ -27,9 +27,9 @@ import injectSaga from 'utils/injectSaga';
 import H2 from 'components/H2';
 import messages from './messages';
 import CenteredSection from './CenteredSection';
-import Button from 'Components/Button';
-import Form from 'Components/Form';
-import Input from 'Components/Input';
+import Button from 'components/Button';
+import Form from 'components/Form';
+import Input from 'components/Input';
 
 export class SignUpPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
