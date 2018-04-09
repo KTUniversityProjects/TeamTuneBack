@@ -23,7 +23,7 @@ export function* signupRequest() {
 
   try {
     // Call our request helper (see 'utils/request')
-    const response = yield call(request, requestURL, {username: username, password: password, passwordConfirm: passwordConfirm, email: email});
+    const response = yield call(request, requestURL, {username: username, password: password, password2: passwordConfirm, email: email});
     yield put(signupSuccess(response));
   } catch (err) {
     yield put(requestError(err));
