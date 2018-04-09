@@ -21,6 +21,7 @@ import LogInPage from 'containers/LogInPage/Loadable';
 import SignUpPage from 'containers/SignUpPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import AboutPage from 'containers/AboutPage/Loadable';
+import Main from 'containers/Main/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
@@ -46,6 +47,7 @@ export default function App() {
         <Route exact path="/about" component={AboutPage} />
         <Route exact path="/login" component={LogInPage} />
         <Route exact path="/signup" component={SignUpPage} />
+        <Route exact path="/main" component={Main} />
         <Route path="" component={NotFoundPage} />
       </Switch>
       <Footer />
