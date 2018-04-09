@@ -15,7 +15,7 @@ import {signupSuccess, requestError} from "./actions";
 export function* signupRequest() {
 
   const requestURL = `http://localhost:1339`;
-  const request = {
+  const requestData = {
     username: yield select(makeSelectUsername()),
     password: yield select(makeSelectPassword()),
     password2: yield select(makeSelectPasswordConfirm()),
@@ -24,7 +24,7 @@ export function* signupRequest() {
 
   try {
     // Call our request helper (see 'utils/request')
-    const response = yield call(request, requestURL, request);
+    const response = yield call(request, requestURL, requestData);
     yield put(signupSuccess(response));
   } catch (err) {
     yield put(requestError(err));

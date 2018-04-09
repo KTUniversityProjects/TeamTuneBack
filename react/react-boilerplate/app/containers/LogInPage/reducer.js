@@ -31,7 +31,11 @@ function loginReducer(state = initialState, action) {
       console.log(action.response);
       if(action.response.code == 0)
       {
-        sessionStorage.setItem('sessionID', action.response.data);
+           sessionStorage.setItem('sessionID', action.response.data);
+      }
+      else
+      {
+          //webservices/core/Responses.go
       }
       return state;
 
