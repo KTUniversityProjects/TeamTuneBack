@@ -11,8 +11,10 @@ import H2 from 'components/H2';
 import messages from './messages';
 import CenteredSection from './CenteredSection';
 import saga from './saga';
+import injectSaga from 'utils/injectSaga';
+import { compose } from 'redux';
 
-export default class Main extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class Main extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
       <div>
@@ -20,3 +22,9 @@ export default class Main extends React.Component { // eslint-disable-line react
     );
   }
 }
+
+const withSaga = injectSaga({ key: 'loginMain', saga });
+
+export default compose(
+  withSaga,
+)(Main);

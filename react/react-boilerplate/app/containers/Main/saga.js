@@ -14,7 +14,7 @@ import {SESSIONID} from "../App/constants";
 export default function* checkLoginState() {
   console.log('asd');
     const sessionID = sessionStorage.getItem(SESSIONID);
-
+    console.log(sessionID);
       const requestURL = `http://localhost:1337`;
       const requestData = {
         session: {
@@ -25,10 +25,11 @@ export default function* checkLoginState() {
         try {
           // Call our request helper (see 'utils/request')
           const response = yield call(request, requestURL, requestData);
-          yield put(signupSuccess(response));
+          console.log(response);
+  ///  yield put(signupSuccess(response));
         } catch (err) {
-          yield put(requestError(err));
+        //  yield put(requestError(err));
         }
 
-  yield takeLatest(LOGIN, loginRequest);
+  yield takeLatest(SESSIONID, checkLoginState);
 }
