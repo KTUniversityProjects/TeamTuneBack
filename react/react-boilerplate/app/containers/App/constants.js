@@ -10,3 +10,6 @@
  */
 
 export const DEFAULT_LOCALE = 'en';
+export const LOGIN_SUCCESS = 'boilerplate/App/LOAD_REPOS_SUCCESS';
+export const LOGIN = 'boilerplate/App/LOGIN';
+export const REQUEST_ERROR = 'boilerplate/App/REQUEST_ERROR';
