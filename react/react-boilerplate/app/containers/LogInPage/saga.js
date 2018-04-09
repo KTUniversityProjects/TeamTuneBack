@@ -7,7 +7,9 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 import request from 'utils/request';
 import {makeSelectPassword, makeSelectUsername} from 'containers/LogInPage/selectors';
 import {LOGIN} from "./constants";
-import {loginSuccess, requestError} from "./actions";
+import {SESSIONID} from "../App/constants";
+import { requestError} from "./actions";
+import { push } from 'react-router-redux';
 
 /**
  * Login request handler
@@ -22,9 +24,18 @@ export function* loginRequest() {
   try {
     // Call our request helper (see 'utils/request')
     const response = yield call(request, requestURL, {username: username, password: password});
-    yield put(loginSuccess(response));
+
+    if(response.code == 0)
+    {
+      sessionStorage.setItem(SESSIONID, response.data);
+      yield put(push('/main'));
+    }
+    else
+    {
+      //webservices/core/Responses.go
+    }
   } catch (err) {
-    yield put(requestError(err));
+
   }
 }
 
@@ -32,5 +43,11 @@ export function* loginRequest() {
  * Root saga manages watcher lifecycle
  */
 export default function* checkLoginState() {
+
+  const sessionID = sessionStorage.getItem(SESSIONID);
+  if(sessionID != null)
+  {
+      yield put(push('/main'));
+  }
   yield takeLatest(LOGIN, loginRequest);
 }

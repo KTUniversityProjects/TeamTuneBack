@@ -18,6 +18,7 @@ import { changeUsername } from './actions';
 import { changePassword } from './actions';
 import { makeSelectUsername } from './selectors';
 import { makeSelectPassword } from './selectors';
+
 import reducer from './reducer';
 import saga from './saga';
 
@@ -83,6 +84,7 @@ export function mapDispatchToProps(dispatch) {
     onSubmitForm: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(login());
+
     },
   };
 }
