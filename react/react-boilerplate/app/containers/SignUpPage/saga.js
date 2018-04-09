@@ -14,16 +14,17 @@ import {signupSuccess, requestError} from "./actions";
  */
 export function* signupRequest() {
 
-  // Select username and password from store
-  const username = yield select(makeSelectUsername());
-  const password = yield select(makeSelectPassword());
-  const passwordConfirm = yield select(makeSelectPasswordConfirm());
-  const email = yield select(makeSelectEmail());
   const requestURL = `http://localhost:1339`;
+  const request = {
+    username: yield select(makeSelectUsername()),
+    password: yield select(makeSelectPassword()),
+    password2: yield select(makeSelectPasswordConfirm()),
+    email: yield select(makeSelectEmail())
+  };
 
   try {
     // Call our request helper (see 'utils/request')
-    const response = yield call(request, requestURL, {username: username, password: password, passwordConfirm: passwordConfirm, email: email});
+    const response = yield call(request, requestURL, request);
     yield put(signupSuccess(response));
   } catch (err) {
     yield put(requestError(err));
