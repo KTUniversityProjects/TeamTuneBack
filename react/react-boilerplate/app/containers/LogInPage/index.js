@@ -13,12 +13,12 @@ import { createStructuredSelector } from 'reselect';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { login } from '../App/actions';
+import { login } from './actions';
 import { changeUsername } from './actions';
 import { changePassword } from './actions';
 import { makeSelectUsername } from './selectors';
 import { makeSelectPassword } from './selectors';
-import reducer from '../App/reducer';
+import reducer from './reducer';
 import saga from './saga';
 
 import Form from 'components/Form';

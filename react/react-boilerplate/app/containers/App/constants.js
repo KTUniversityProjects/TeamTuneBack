@@ -10,6 +10,3 @@
  */
 
 export const DEFAULT_LOCALE = 'en';
-export const LOGIN_SUCCESS = 'boilerplate/App/LOGIN_SUCCESS';
-export const LOGIN = 'boilerplate/App/LOGIN';
-export const REQUEST_ERROR = 'boilerplate/App/REQUEST_ERROR';
