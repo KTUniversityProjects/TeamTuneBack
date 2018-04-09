@@ -18,7 +18,7 @@ import { changeUsername } from './actions';
 import { changePassword } from './actions';
 import { makeSelectUsername } from './selectors';
 import { makeSelectPassword } from './selectors';
-import reducer from './reducer';
+import reducer from '../App/reducer';
 import saga from './saga';
 
 import Form from 'components/Form';
