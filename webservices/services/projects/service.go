@@ -47,7 +47,7 @@ func getHandler() {
 	UserID := core.Dao.CheckSession(data.Session)
 
 	//Gets all projects
-	getList(UserID)
+	getList(UserID, data.Project)
 }
 
 func deleteHandler() {
