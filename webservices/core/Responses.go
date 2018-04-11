@@ -15,6 +15,7 @@ func loadResponses() {
 	Responses["database_error"] = Response{ResponseCode: 200, ResponseMsg: "Failed to make database query"}
 	Responses["decode_failure"] = Response{ResponseCode: 201, ResponseMsg: "Failed to decode Request data"}
 	Responses["system_mistake"] = Response{ResponseCode: 202, ResponseMsg: "Mistake in Web Service"}
+	Responses["routing_mistake"] = Response{ResponseCode: 203, ResponseMsg: "Routing mistake in Web Service"}
 
 	//Request & validation
 	Responses["empty_fields"] = Response{ResponseCode: 220, ResponseMsg: "No Empty Fields"}

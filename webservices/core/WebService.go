@@ -6,9 +6,12 @@ import (
 	"fmt"
 )
 
-func Initialize(function func(), port string){
+func AddRouting(requestType string, function func()){
+	dofunc[requestType] = function
+}
+
+func Initialize(port string){
 	loadResponses()
-	dofunc = function
 	Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
 	http.HandleFunc("/", requestFunc)
 	http.ListenAndServe(Config.Host + ":" + port, nil)
@@ -21,11 +24,11 @@ func CORS(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
+	w.Header().Set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
 }
 
-var dofunc func()
+var dofunc = make(map[string]func())
 var currentRequest *http.Request
 
 func requestFunc(w http.ResponseWriter, r *http.Request){
@@ -33,7 +36,12 @@ func requestFunc(w http.ResponseWriter, r *http.Request){
 	currentRequest = r
 	P = Response{ResponseCode: 0, ResponseMsg: "Success"}
 	defer PrintReponse(w)
-	dofunc()
+
+	if val, ok := dofunc[r.Method]; ok {
+		val()
+	} else {
+		ThrowResponse("routing_mistake")
+	}
 }
 
 //Decodes response to ,,item"

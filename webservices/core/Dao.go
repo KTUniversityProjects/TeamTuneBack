@@ -44,15 +44,20 @@ func (r *MongoDatabase) Connect(host string, databaseName string){
 func (r *MongoDatabase) CheckSession(session structures.Session) (bson.ObjectId){
 	r.C("sessions")
 
+	//finds session
 	err := r.Collection.Find(bson.M{"_id":session.SessionID, "expires" : bson.M{"$gt": time.Now()}}).One(&session)
 	if err != nil {
 		ThrowResponse("wrong_session")
 	}
 
+	//updates current session expiration time
 	err = r.Collection.Update(bson.M{"_id":session.SessionID}, bson.M{"$set": bson.M{"expires" : time.Now().Add(time.Duration(24*time.Hour))}})
 	if err != nil {
 		ThrowResponse("database_error")
 	}
+
+	//deletes old unaccessible sessions
+	r.Collection.RemoveAll(bson.M{"user":session.UserID, "expires" : bson.M{"$lt": time.Now()}})
 
 	return session.UserID
 }
