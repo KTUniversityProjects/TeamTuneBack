@@ -7,14 +7,11 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import ProjectListItem from 'containers/ProjectListItem';
 
 function ProjectsList({ loading, error, projects }) {
-  console.log('listload');
-    console.log(projects);
-      console.log(error);
-        console.log(loading);
   if (loading) {
     return <List component={LoadingIndicator} />;
   }
-    if (projects !== false) {
+
+    if (projects) {
       return <List items={projects} component={ProjectListItem} />;
     }
 
