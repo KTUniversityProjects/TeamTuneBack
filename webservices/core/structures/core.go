@@ -11,3 +11,7 @@ type Session struct{
 	Expires time.Time `json:"expires,omitempty" bson:"expires,omitempty"`
 }
 
+type SessionRequest struct{
+	Session Session `json:"session"`
+}
+

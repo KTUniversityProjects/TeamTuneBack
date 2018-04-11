@@ -23,7 +23,7 @@ export function* loginRequest() {
 
   try {
     // Call our request helper (see 'utils/request')
-    const response = yield call(request, requestURL, {username: username, password: password});
+    const response = yield call(request, requestURL, "POST", {username: username, password: password});
 
     if(response.code == 0)
     {

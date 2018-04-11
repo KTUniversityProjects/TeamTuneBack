@@ -3,6 +3,7 @@ package main
 import (
 	"../../core"
 	"../../core/structures"
+	"fmt"
 )
 
 var servicePort = "1339"
@@ -17,12 +18,12 @@ func main() {
 func deleteHandler(){
 
 	// gaudai structures.Session, reiškia kai darysi requestą turėsi siųsti datą tokiu formatu - {session:{id:"vaCiaSessijosID"}}
-	var data structures.Session
+	var data structures.SessionRequest
 	core.DecodeRequest(&data)
-
+	fmt.Println(data)
 	//Va čia gausi user id
-	userID := core.Dao.CheckSession(data)
-	deleteUser(userID) //User ID jau grįžta kaip bson.ObjectId, tai nereikia čia, užtenka userID parašyt
+	userID := core.Dao.CheckSession(data.Session)
+	deletesUser(userID) //User ID jau grįžta kaip bson.ObjectId, tai nereikia čia, užtenka userID parašyt
 }
 
 func registerHandler() {
