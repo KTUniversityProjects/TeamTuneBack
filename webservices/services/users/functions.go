@@ -12,11 +12,10 @@ import (
 
 func deleteUser(userID bson.ObjectId) {
 
-	//šit vieta bus gerai, tik
-	err := core.Dao.Collection.Remove(bson.M{"user":userID})// vėl rašai bson.ObjectId, nors userID jau yra bson.ObjectId tipo, tai čia vėl užtenka userID tik parašyt
-
-	//čia skliaustų nereikia
+	core.Dao.C("users")
+	err := core.Dao.Collection.Remove(bson.M{"_id":userID})
 	if err != nil {
+		fmt.Println("Error removing user")
 		core.ThrowResponse("database_error")
 	}
 
@@ -27,7 +26,17 @@ func deleteUser(userID bson.ObjectId) {
 	//Reiškia turi sutikrint visus projektus. O jei gausis taip, kad trinsi projektą, turi ištrinti ir jo boards. O vėliau ir dar daugaiu visko reikės papildyti.
 }
 
-func EncryptPassword(password string) (string, error) {
+func deleteSessions(userID bson.ObjectId) {
+
+	core.Dao.C("sessions")
+	_ , err := core.Dao.Collection.RemoveAll(bson.M{"user":userID})
+	if err != nil {
+		fmt.Println("Error removing session")
+		core.ThrowResponse("database_error")
+	}
+}
+
+	func EncryptPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
 }
