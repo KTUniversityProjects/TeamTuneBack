@@ -3,7 +3,7 @@ package main
 import (
 	"../../../core"
 	"gopkg.in/mgo.v2/bson"
-	"../../projects"
+	"../../../core/structures"
 )
 
 var servicePort = "1340"
@@ -13,24 +13,22 @@ func do() {
 	// čia turi būti ne PojectRequest, o User ar kažkas panašaus t.y. į kokio tipo struktūra bus suparsintas tavo siūstas request. ž
 	// Realiai, kad ištrinti user'į tai tau reikia tik USER ID, bet user ID mes tiesiogiai nesiunčiam, siunčiam sesijos ID. Tai tau čia reik sesijos struktūrą nurodyt
 	//O ji jau sukurta core/structures/structures.go, tai gali ir įrašyt čia structures.Session
-	var data projects.ProjectRequest
-
+	var data structures.Session
 	core.DecodeRequest(&data)
-
 	//CreateSession(data, bson.ObjectId(userID)) //Sesija kuriama tik loginantis. Kad gaut sesijos ID. Tai šito nereikia.
 
 	//Va čia gausi user id
-	userID := core.Dao.CheckSession(data.Session)
-	deletesUser(bson.ObjectId((userID))) //USer ID jau grįžta kaip bson.ObjectId, tai nereikia čia, užtenka userID parašyt
+	userID := core.Dao.CheckSession(data)
+	deletesUser(userID) //USer ID jau grįžta kaip bson.ObjectId, tai nereikia čia, užtenka userID parašyt
 }
 
 func deletesUser(userID bson.ObjectId) {
 
 	//šit vieta bus gerai, tik
-	err := core.Dao.Collection.Remove(bson.M{"user":bson.ObjectId(userID)})// vėl rašai bson.ObjectId, nors userID jau yra bson.ObjectId tipo, tai čia vėl užtenka userID tik parašyt
+	err := core.Dao.Collection.Remove(bson.M{"user":userID})// vėl rašai bson.ObjectId, nors userID jau yra bson.ObjectId tipo, tai čia vėl užtenka userID tik parašyt
 
 	//čia skliaustų nereikia
-	if(err != nil){
+	if err != nil {
 		core.ThrowResponse("database_error")
 	}
 
