@@ -41,10 +41,10 @@ function checkStatus(response) {
  *
  * @return {object}           The response data
  */
-export default function request(url, payload = {}) {
+export default function request(url, type = "POST", payload = {}) {
   console.log(payload);
   return fetch(url, {
-    method: 'POST',
+    method: type,
     headers: {
       'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json'
