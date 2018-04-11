@@ -10,7 +10,7 @@ import (
 )
 
 
-func deletesUser(userID bson.ObjectId) {
+func deleteUser(userID bson.ObjectId) {
 
 	//šit vieta bus gerai, tik
 	err := core.Dao.Collection.Remove(bson.M{"user":userID})// vėl rašai bson.ObjectId, nors userID jau yra bson.ObjectId tipo, tai čia vėl užtenka userID tik parašyt

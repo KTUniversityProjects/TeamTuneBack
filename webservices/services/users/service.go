@@ -22,7 +22,7 @@ func deleteHandler(){
 
 	//Va čia gausi user id
 	userID := core.Dao.CheckSession(data)
-	deletesUser(userID) //User ID jau grįžta kaip bson.ObjectId, tai nereikia čia, užtenka userID parašyt
+	deleteUser(userID) //User ID jau grįžta kaip bson.ObjectId, tai nereikia čia, užtenka userID parašyt
 }
 
 func registerHandler() {
