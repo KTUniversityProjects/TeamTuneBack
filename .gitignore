@@ -1,3 +1,3 @@
-webservices/builds/*.exe
+*.exe
 .idea/*
 webservices/core/config.go

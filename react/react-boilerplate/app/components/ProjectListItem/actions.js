@@ -16,8 +16,7 @@
  */
 
 import {
-    LOAD_PROJECTS,
-    LOAD_PROJECTS2,
+    DELETE_ITEM,
 } from './constants';
 
 /**
@@ -25,19 +24,8 @@ import {
  *
  * @return {object} An action object with a type of LOAD_REPOS
  */
-export function loadProjects() {
+export function deleteItem() {
   return {
-    type: LOAD_PROJECTS
-  };
-}
-/**
- * Load the repositories, this action starts the request saga
- *
- * @return {object} An action object with a type of LOAD_REPOS
- */
-export function loadProjects2(projects) {
-  return {
-    type: LOAD_PROJECTS2,
-    projects
+    type: DELETE_ITEM,
   };
 }
