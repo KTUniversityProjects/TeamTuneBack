@@ -24,7 +24,7 @@ const initialState = fromJS({
   projects: false,
 });
 
-function mainReducer(state = initialState, action) {
+function projectListReducer(state = initialState, action) {
   console.log("REDUCER");
     console.log(action.type);
   switch (action.type) {
@@ -42,20 +42,9 @@ function mainReducer(state = initialState, action) {
         .set('error', false)
       //  .set('projects', action.projects)
         .set('projects', [])
-        /*
-    case LOAD_REPOS_SUCCESS:
-      return state
-        .setIn(['userData', 'repositories'], action.repos)
-        .set('loading', false)
-        .set('currentUser', action.username);
-    case LOAD_REPOS_ERROR:
-      return state
-        .set('error', action.error)
-        .set('loading', false);
-        */
     default:
       return state;
   }
 }
 
-export default mainReducer;
+export default projectListReducer;
