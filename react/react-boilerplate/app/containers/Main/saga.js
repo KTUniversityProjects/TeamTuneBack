@@ -14,6 +14,6 @@ export default function* checkLoginState() {
   const sessionID = sessionStorage.getItem(SESSIONID);
   if(sessionID == null)
   {
-       yield put(push('/login'));
+       yield put(push('/'));
   }
 }
