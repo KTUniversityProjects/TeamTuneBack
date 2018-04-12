@@ -16,7 +16,7 @@ import loadProjects2 from './actions';
  */
 export function* getProjects() {
 console.log('sadasdasd');
-  const requestURL = `http://localhost:1337`;
+  const requestURL = `http://localhost:1338`;
   const sessionID = sessionStorage.getItem(SESSIONID);
   const requestData = {
     session: {

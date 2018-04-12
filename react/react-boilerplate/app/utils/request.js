@@ -37,12 +37,14 @@ function checkStatus(response) {
  * Requests a URL, returning a promise
  *
  * @param  {string} url       The URL we want to request
- * @param  {object} [options] The options we want to pass to "fetch"
+ * @param  {string} [type] The options we want to pass to "fetch"
+ * @param  {object} [payload] The options we want to pass to "fetch"
  *
  * @return {object}           The response data
  */
 export default function request(url, type = "POST", payload = {}) {
   console.log(payload);
+  console.log(type);
   return fetch(url, {
     method: type,
     headers: {

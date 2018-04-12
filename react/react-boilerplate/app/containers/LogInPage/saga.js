@@ -19,7 +19,7 @@ export function* loginRequest() {
   // Select username and password from store
   const username = yield select(makeSelectUsername());
   const password = yield select(makeSelectPassword());
-  const requestURL = `http://localhost:1338`;
+  const requestURL = `http://localhost:1339`;
 
   try {
     // Call our request helper (see 'utils/request')
