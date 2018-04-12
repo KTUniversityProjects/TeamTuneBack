@@ -3,32 +3,35 @@ import PropTypes from 'prop-types';
 
 import List from 'components/List';
 import ListItem from 'components/ListItem';
-import LoadingIndicator from 'components/LoadingIndicator';
 import ProjectListItem from 'components/ProjectListItem';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import {connect} from 'react-redux';
+import {createStructuredSelector} from 'reselect';
 import reducer from './reducer';
 import saga from './saga';
-import { compose } from 'redux';
+import {compose} from 'redux';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import {LOAD_PROJECTS} from './constants';
 
 import {makeSelectProjects} from "./selectors";
-//import reducer from './reducer';
 
 export class ProjectsList extends React.Component {
 
-   componentDidMount() {
-       this.props.onPageLoad();
-   }
+  componentDidMount() {
+    this.props.onPageLoad();
+  }
 
   render() {
-    const ErrorComponent = () => (
-      <ListItem item={'Something went wrong, please try again!'} />
-    );
-    return <List component={ErrorComponent} />;
+    const { projects } = this.props;
 
+    if (projects) {
+      return <List items={projects} component={ProjectListItem}/>;
+    }
+
+    const ErrorComponent = () => (
+      <ListItem item={'Something went wrong, please try again!'}/>
+    );
+    return <List component={ErrorComponent}/>;
   }
 }
 
@@ -53,8 +56,8 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-const withSaga = injectSaga({ key: 'projects', saga });
-const withReducer = injectReducer({ key: 'projects', reducer });
+const withSaga = injectSaga({key: 'projects', saga});
+const withReducer = injectReducer({key: 'projects', reducer});
 
 export default compose(
   withReducer,

@@ -19,8 +19,6 @@ import {
 
 // The initial state of the App
 const initialState = fromJS({
-  loading: false,
-  error: false,
   projects: false,
 });
 
@@ -28,16 +26,13 @@ function projectListReducer(state = initialState, action) {
   switch (action.type) {
 
     case LOAD_PROJECTS2:
+      console.log("asdasdasd");
       return state
-        .set('loading', false)
-        .set('error', false)
-        .set('projects', action.projects)
+        .set('projects', action.projects);
 
     case LOAD_PROJECTS:
       return state
-        .set('loading', true)
-        .set('error', false)
-        .set('projects', [])
+        .set('projects', []);
     default:
       return state;
   }
