@@ -29,7 +29,7 @@ import H2 from 'components/H2';
 import messages from './messages';
 import CenteredSection from './CenteredSection';
 import Button from 'components/Button';
-import A from 'components/A';
+import { Link } from 'react-router-dom';
 
 export class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -65,8 +65,8 @@ export class HomePage extends React.Component { // eslint-disable-line react/pre
                   children="Login"
                   onClick={this.props.onSubmitForm}
                 />
-                <A
-                  href="/signup"
+                <Link
+                  to="/signup"
                   children="asdasdsa"
                 />
             </Form>
