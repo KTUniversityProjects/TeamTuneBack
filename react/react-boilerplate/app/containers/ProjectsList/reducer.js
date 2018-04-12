@@ -25,12 +25,9 @@ const initialState = fromJS({
 });
 
 function projectListReducer(state = initialState, action) {
-  console.log("REDUCER");
-    console.log(action.type);
   switch (action.type) {
 
     case LOAD_PROJECTS2:
-    console.log(action.projects);
       return state
         .set('loading', false)
         .set('error', false)
@@ -40,7 +37,6 @@ function projectListReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('error', false)
-      //  .set('projects', action.projects)
         .set('projects', [])
     default:
       return state;

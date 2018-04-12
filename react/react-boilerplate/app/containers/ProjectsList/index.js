@@ -12,6 +12,7 @@ import saga from './saga';
 import { compose } from 'redux';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import {LOAD_PROJECTS} from './constants';
 
 import {makeSelectProjects} from "./selectors";
 //import reducer from './reducer';
@@ -23,15 +24,11 @@ export class ProjectsList extends React.Component {
    }
 
   render() {
-
-    if (projects) {
-      return <List items={projects} component={ProjectListItem} />;
-    }
-
     const ErrorComponent = () => (
       <ListItem item={'Something went wrong, please try again!'} />
     );
     return <List component={ErrorComponent} />;
+
   }
 }
 

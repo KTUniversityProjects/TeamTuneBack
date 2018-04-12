@@ -34,6 +34,7 @@ console.log('sadasdasd');
         });
       }
     } catch (err) {
+      Console.log("Hujakst");
     }
 }
 /**
