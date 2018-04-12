@@ -37,7 +37,7 @@ console.log('sadasdasd');
       else
       {
           sessionStorage.removeItem(SESSIONID);
-          yield put(push('/login'));
+          yield put(push('/'));
       }
     } catch (err) {
     }
@@ -49,7 +49,7 @@ export default function* checkLoginState() {
   const sessionID = sessionStorage.getItem(SESSIONID);
   if(sessionID == null)
   {
-    yield put(push('/login'));
+    yield put(push('/'));
   }
 
   yield takeLatest(LOAD_PROJECTS, getProjects);
