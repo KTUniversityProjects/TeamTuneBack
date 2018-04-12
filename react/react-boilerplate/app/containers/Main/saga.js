@@ -25,7 +25,7 @@ console.log('sadasdasd');
   };
     try {
       // Call our request helper (see 'utils/request')
-      const response = yield call(request, "POST",  requestURL, requestData);
+      const response = yield call(request,  requestURL, "POST", requestData);
       console.log(response);
       if(response.code == 0)
       {
