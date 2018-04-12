@@ -24,7 +24,7 @@ export function* signupRequest() {
 
   try {
     // Call our request helper (see 'utils/request')
-    const response = yield call(request, "PUT",  requestURL, requestData);
+    const response = yield call(request,  requestURL, "PUT", requestData);
     yield put(signupSuccess(response));
   } catch (err) {
     yield put(requestError(err));

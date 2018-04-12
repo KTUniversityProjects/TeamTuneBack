@@ -17,7 +17,6 @@ import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
 import HomePage from 'containers/HomePage/Loadable';
-import LogInPage from 'containers/LogInPage/Loadable';
 import SignUpPage from 'containers/SignUpPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import AboutPage from 'containers/AboutPage/Loadable';
@@ -45,7 +44,6 @@ export default function App() {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/about" component={AboutPage} />
-        <Route exact path="/login" component={LogInPage} />
         <Route exact path="/signup" component={SignUpPage} />
         <Route exact path="/main" component={Main} />
         <Route path="" component={NotFoundPage} />
