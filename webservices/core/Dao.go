@@ -45,8 +45,9 @@ func (r *MongoDatabase) CheckSession(session structures.Session) (bson.ObjectId)
 	r.C("sessions")
 
 	//finds session
-	err := r.Collection.Find(bson.M{"_id":session.SessionID, "expires" : bson.M{"$gt": time.Now()}}).One(&session)
+	err := r.Collection.Find(bson.M{"_id":session.SessionID, "user":session.UserID, "expires" : bson.M{"$gt": time.Now()}}).One(&session)
 	if err != nil {
+		fmt.Println("CheckSession")
 		fmt.Println(err)
 		ThrowResponse("wrong_session")
 	}
@@ -54,6 +55,7 @@ func (r *MongoDatabase) CheckSession(session structures.Session) (bson.ObjectId)
 	//updates current session expiration time
 	err = r.Collection.Update(bson.M{"_id":session.SessionID}, bson.M{"$set": bson.M{"expires" : time.Now().Add(time.Duration(24*time.Hour))}})
 	if err != nil {
+		fmt.Println("UpdateSession")
 		fmt.Println(err)
 		ThrowResponse("database_error")
 	}
