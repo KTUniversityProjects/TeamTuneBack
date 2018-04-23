@@ -8,14 +8,15 @@ type Board struct {
 	Name string             `json:"name" bson:"name,omitempty"`
 	Description string      `json:"description,omitempty" bson:"description,omitempty"`
 	ProjectID bson.ObjectId `json:"project,omitempty" bson:"project"`
+	Tasks []bson.ObjectId   `json:"tasks,omitempty" bson:"_tasks,omitempty"`
 }
 
 type BoardCreation struct{
-	Board Board    `json:"board,omitempty"`
+	Board Board    		  `json:"board,omitempty"`
 	Session Session       `json:"session,omitempty"`
 }
 
 type BoardListRequest struct{
 	ProjectID bson.ObjectId       `json:"project"`
-	Session Session    `json:"session"`
+	Session Session    			  `json:"session"`
 }

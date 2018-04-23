@@ -16,7 +16,8 @@ var MGOCollections = map[string]string{
 	"users":    "users",
 	"sessions": "sessions",
 	"boards":   "boards",
-	"projects": "projects"}
+	"projects": "projects",
+	"tasks":   "tasks"}
 
 
 //EOF
