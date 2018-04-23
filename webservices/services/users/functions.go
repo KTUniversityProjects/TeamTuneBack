@@ -81,7 +81,7 @@ func createSession(userID bson.ObjectId) {
 		core.ThrowResponse("database_error")
 	}
 
-	core.SetData(sessionID)
+	core.SetData(session)
 }
 
 
