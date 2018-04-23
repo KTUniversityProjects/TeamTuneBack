@@ -2,7 +2,10 @@ package main
 
 import "gopkg.in/mgo.v2/bson"
 import "../../core"
-import "../../core/structures"
+import (
+	"../../core/structures"
+	"fmt"
+)
 
 //Chech Project existance for User
 func checkFieldsExistance(project structures.Project) {
@@ -73,9 +76,11 @@ func checkUser(project structures.Project) {
 
 	count, err := core.Dao.Collection.Find(bson.M{"_id": project.ID, "users": bson.M{"$elemMatch": project.Users[0]}}).Count()
 	if err != nil {
+		fmt.Println(err)
 		core.ThrowResponse("database_error")
 	}
 	if count == 0 {
+		fmt.Println(err)
 		core.ThrowResponse("project_not_exists")
 	}
 }
@@ -87,6 +92,7 @@ func removeBoards(projectID bson.ObjectId) {
 
 	err := core.Dao.Collection.Remove(bson.M{"project": projectID})
 	if err != nil {
+		fmt.Println(err)
 		core.ThrowResponse("database_error")
 	}
 }
@@ -99,6 +105,7 @@ func removeProject(projectID bson.ObjectId) {
 
 	err := core.Dao.Collection.Remove(bson.M{"_id": projectID})
 	if err != nil {
+		fmt.Println(err)
 		core.ThrowResponse("database_error")
 	}
 }
