@@ -24,10 +24,10 @@ func getHandler() {
 	UserID := core.Dao.CheckSession(data.Session)
 
 	//Checks user
-	CheckUser(data.ProjectID, UserID)
+	CheckUser(data.Project.ID, UserID)
 
 	//Gets project list
-	getList(data.ProjectID)
+	getList(data.Project.ID)
 
 }
 

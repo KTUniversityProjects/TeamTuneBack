@@ -17,6 +17,6 @@ type BoardCreation struct{
 }
 
 type BoardListRequest struct{
-	ProjectID bson.ObjectId       `json:"project"`
+	Project Project               `json:"project"`
 	Session Session    			  `json:"session"`
 }
