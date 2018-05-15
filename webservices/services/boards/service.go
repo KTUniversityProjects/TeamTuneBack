@@ -8,10 +8,29 @@ import (
 var servicePort = "1337"
 
 func main() {
-	//core.AddRouting("DELETE", deleteHandler)
+	core.AddRouting("DELETE", deleteHandler)
 	core.AddRouting("PUT", createHandler)
 	core.AddRouting("POST", getHandler)
 	core.Initialize(servicePort)
+}
+
+func deleteHandler() {
+
+	//Parses request data to
+	var data structures.BoardRequest
+	core.DecodeRequest(&data)
+
+	//Gets user
+	user := core.Dao.CheckSession(data.Session)
+
+	//validates
+	checkUser(data.Board.ID, user)
+
+	//Remove Boards
+	removeTasks(data.Board.ID)
+
+	//Remove Project
+	removeBoard(data.Board.ID)
 }
 
 func getHandler() {
@@ -34,7 +53,7 @@ func getHandler() {
 func createHandler() {
 
 	//Parses request data to
-	var data structures.BoardCreation
+	var data structures.BoardRequest
 	core.DecodeRequest(&data)
 
 	//Gets user

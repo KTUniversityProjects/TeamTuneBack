@@ -11,7 +11,7 @@ type Board struct {
 	Tasks []bson.ObjectId   `json:"tasks,omitempty" bson:"_tasks,omitempty"`
 }
 
-type BoardCreation struct{
+type BoardRequest struct{
 	Board Board    		  `json:"board,omitempty"`
 	Session Session       `json:"session,omitempty"`
 }

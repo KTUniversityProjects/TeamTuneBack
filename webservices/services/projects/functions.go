@@ -92,7 +92,27 @@ func removeBoards(projectID bson.ObjectId) {
 
 	core.Dao.C("boards")
 
-	_, err := core.Dao.Collection.RemoveAll(bson.M{"project": projectID})
+	var boards []structures.Board
+	err := core.Dao.Collection.Find(bson.M{"project": projectID}).Select(bson.M{"_id": 1}).All(&boards)
+	if err != nil {
+		fmt.Println("GetBoards")
+		fmt.Println(err)
+		core.ThrowResponse("database_error")
+	}
+
+	core.Dao.C("tasks")
+	for _, element := range boards {
+		_, err = core.Dao.Collection.RemoveAll(bson.M{"board": element.ID})
+		if err != nil {
+			fmt.Println("tasks delete")
+			fmt.Println(err)
+			core.ThrowResponse("database_error")
+		}
+		fmt.Println(element.Tasks)
+	}
+
+	core.Dao.C("boards")
+	_, err = core.Dao.Collection.RemoveAll(bson.M{"project": projectID})
 	if err != nil {
 		fmt.Println("RemoveBoards")
 		fmt.Println(err)
