@@ -40,25 +40,6 @@ func getList(boardID bson.ObjectId) {
 //Validates project Data
 func validate(task structures.Task) {
 
-	if task.Name == "" {
-		core.ThrowResponse("empty_fields")
-	}
-
-	checkFieldsExistence(task)
-}
-
-//Chech Project existance for User
-func checkFieldsExistence(project structures.Task) {
-	core.Dao.C("projects")
-
-	count, err := core.Dao.Collection.Find(bson.M{"name": project.Name}).Count()
-	fmt.Println(count)
-	if err != nil {
-		core.ThrowResponse("database_error")
-	}
-	if count > 0 {
-		core.ThrowResponse("name_exists")
-	}
 }
 
 //checks if project contains user

@@ -21,7 +21,6 @@ func deleteHandler(){
 }
 
 func getHandler() {
-
 	//Parses request data to
 	var data structures.TaskListRequest
 	core.DecodeRequest(&data)
@@ -34,6 +33,9 @@ func addHandler() {
 	var data structures.TaskCreationRequest
 	//Parses request data
 	core.DecodeRequest(&data)
+
+	//Sets name for task
+	data.Task.Name = defaultName
 
 	//Gets user
 	user := core.Dao.CheckSession(data.Session)
