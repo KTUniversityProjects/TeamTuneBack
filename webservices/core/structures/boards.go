@@ -8,7 +8,7 @@ type Board struct {
 	Name string             `json:"name" bson:"name,omitempty"`
 	Description string      `json:"description,omitempty" bson:"description,omitempty"`
 	ProjectID bson.ObjectId `json:"project,omitempty" bson:"project"`
-	Tasks []bson.ObjectId   `json:"tasks,omitempty" bson:"_tasks,omitempty"`
+	Tasks []Task   `json:"tasks,omitempty" bson:"_tasks,omitempty"`
 }
 
 type BoardRequest struct{

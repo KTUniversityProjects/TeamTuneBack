@@ -38,11 +38,11 @@ func addHandler() {
 	//Gets user
 	user := core.Dao.CheckSession(data.Session)
 
-	//gets project
-	checkUser(data, user)
+	//check if user able to edit board
+	checkUser(data.Board.ID, user)
 
 	validate(data.Task)
 	//Adds user to database
-
+	data.Task.BoardID = data.Board.ID
 	addTask(data)
 }
