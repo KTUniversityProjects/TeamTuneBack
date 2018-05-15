@@ -21,7 +21,7 @@ func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 	}
 
 	core.Dao.C("projects")
-	count, err := core.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": userID}}).Count()
+	count, err := core.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": bson.M{"_id":userID}}}).Count()
 	if err != nil {
 		fmt.Println("FindUser")
 		fmt.Println(err)
@@ -130,11 +130,11 @@ func validate(board structures.Board, project structures.Project) {
 }
 
 //Gets project for board creation
-func getProject(board structures.Board, user bson.ObjectId) structures.Project {
+func getProject(board structures.Board, userID bson.ObjectId) structures.Project {
 	core.Dao.C("projects")
 
 	var project = structures.Project{}
-	err := core.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": bson.M{"_id": user}}}).One(&project)
+	err := core.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": bson.M{"_id": userID}}}).One(&project)
 
 	if err != nil || project.ID == "" {
 		core.ThrowResponse("project_not_exists")
