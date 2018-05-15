@@ -11,9 +11,9 @@ import (
 func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 
 	core.Dao.C("boards")
-	var projectID bson.ObjectId
+	var board structures.Board
 
-	err := core.Dao.Collection.Find(bson.M{"_id": boardID}).Select(bson.M{"project": 1}).One(&projectID)
+	err := core.Dao.Collection.Find(bson.M{"_id": boardID}).Select(bson.M{"project": 1}).One(&board)
 	if err != nil {
 		fmt.Println("getProjectID")
 		fmt.Println(err)
@@ -21,7 +21,7 @@ func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 	}
 
 	core.Dao.C("projects")
-	count, err := core.Dao.Collection.Find(bson.M{"_id": projectID, "users": bson.M{"$elemMatch": userID}}).Count()
+	count, err := core.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": userID}}).Count()
 	if err != nil {
 		fmt.Println("FindUser")
 		fmt.Println(err)
