@@ -11,6 +11,7 @@ func AddRouting(requestType string, function func()){
 }
 
 func Initialize(port string){
+	AddRouting("OPTIONS", func(){})
 	loadResponses()
 	Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
 	http.HandleFunc("/", requestFunc)
