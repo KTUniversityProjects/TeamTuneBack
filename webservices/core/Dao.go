@@ -3,7 +3,7 @@ package core
 import  (
 	"gopkg.in/mgo.v2"
 	"fmt"
-	"./structures"
+	"github.com/StulIK/TeamTune/webservices/core/structures"
 	"gopkg.in/mgo.v2/bson"
 	"time"
 )

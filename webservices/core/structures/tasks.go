@@ -14,6 +14,11 @@ type TaskCreationRequest struct {
 	Board Board 			`json:"board,omitempty"`
 }
 
+type TaskRequest struct {
+	Task Task 				`json:"task,omitempty"`
+	Session Session 		`json:"session,omitempty"`
+}
+
 //listo grazinimui
 type TaskListRequest struct{
 	BoardID bson.ObjectId         `json:"board"`
