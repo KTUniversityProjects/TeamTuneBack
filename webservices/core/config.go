@@ -1,5 +1,7 @@
 package core
 
+import "os"
+
 //Main project config
 var Config = ConfigStruct{
 
@@ -11,7 +13,21 @@ var Config = ConfigStruct{
 	//Server
 	Host: "localhost"}
 
-//EOF
+var ConfigDev = ConfigStruct{
+
+	//Mongo Database
+	DatabaseHost: "localhost",
+	DatabasePort: "27017",
+	DatabaseName: "teamtune",
+
+	//Server
+	Host: "localhost"}
+
+
+func Exists(name string) bool {
+	_, err := os.Stat(name)
+	return !os.IsNotExist(err)
+}
 
 type ConfigStruct struct {
 	DatabaseHost string

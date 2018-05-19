@@ -13,7 +13,11 @@ func AddRouting(requestType string, function func()){
 func Initialize(port string){
 	AddRouting("OPTIONS", func(){})
 	loadResponses()
-	Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
+	if Exists("developer") {
+		Dao.Connect(ConfigDev.DatabaseHost + ":" + ConfigDev.DatabasePort, ConfigDev.DatabaseName)
+	} else {
+		Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
+	}
 	http.HandleFunc("/", requestFunc)
 	http.ListenAndServe(Config.Host + ":" + port, nil)
 }
