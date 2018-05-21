@@ -8,6 +8,8 @@ import (
 	"bytes"
 )
 
+
+var testHost = "http://192.168.99.100"
 func main() {
 	//Tests users, creates 2 users and logs them for future testing
 	sessionID1,userID1,sessionID2,userID2 := usersTest()
@@ -24,10 +26,9 @@ func main() {
 	fmt.Println("PROJECTID2 - " + projectID2)
 }
 
-func makeRequest(data string, expectedResponse []int, url string, reqType string)(interface{}){
-
+func makeRequest(data string, expectedResponse []int, port string, reqType string)(interface{}){
 	var jsonStr = []byte(data)
-	req, err := http.NewRequest(reqType, url, bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest(reqType, testHost + ":" + port, bytes.NewBuffer(jsonStr))
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}

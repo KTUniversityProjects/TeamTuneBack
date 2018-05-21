@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func usersTest()(string, string, string, string){
 	registerTest()
 	return loginTest()
@@ -17,6 +19,8 @@ func registerTest(){
 		[]int{261}, "PUT")
 	usersRequest("{\"username\":\"threatx\",\"password\":\"slaptazodis\",\"email\":\"viliusxz@rinkodara.lt\",\"password2\":\"slaptazodis\"}",
 		[]int{260}, "PUT")
+
+	fmt.Println("Register test passed")
 }
 
 func loginTest()(string, string, string, string){
@@ -32,9 +36,10 @@ func loginTest()(string, string, string, string){
 	usersRequest("{\"username\":\"....\",\"password\":\"....\"}",
 		[]int{263}, "POST")
 
+	fmt.Println("Login test passed")
 	return data["id"].(string), data["user"].(string), data2["id"].(string), data2["user"].(string)
 }
 
 func usersRequest(data string, expectedResponse []int, reqType string)(interface{}) {
-	return makeRequest(data, expectedResponse, "http://192.168.99.100:1339", reqType)
+	return makeRequest(data, expectedResponse, "1339", reqType)
 }

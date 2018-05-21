@@ -5,7 +5,6 @@ import (
 	_"fmt"
 )
 
-
 func main() {
 	core.AddRouting("PUT", addHandler)
 	core.AddRouting("POST", getHandler)

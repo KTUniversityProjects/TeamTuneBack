@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func createTest(sessionID string, userID string)(string){
 
 	data := projectsRequest("{\"session\": {\"id\": \"" + sessionID + "\",\"user\": \"" + userID + "\"},\"project\": {\"name\": \"Projektas2\",\"description\": \"Čia yra projektas 1 sukūriau jį pasitestavimui\"}}",
@@ -36,6 +38,7 @@ func getAndDeleteTest(sessionID string, userID string,sessionID2 string, userID2
 		projectsRequest("{\"session\": {\"id\": \"" + sessionID2 + "\",\"user\": \"" + userID2 + "\"},\"project\": {\"id\":\"" + data2[i].(map[string]interface{})["id"].(string) + "\"}}",
 			[]int{0}, "DELETE")
 	}
+	fmt.Println("Project Get list and delete test passed")
 }
 
 func projectsTest(sessionID string, userID string,sessionID2 string, userID2 string)(string, string){
@@ -44,9 +47,13 @@ func projectsTest(sessionID string, userID string,sessionID2 string, userID2 str
 
 	projectID1 := createTest(sessionID, userID)
 	projectID2 := createTest(sessionID2, userID2)
+
+
+	fmt.Println("Project Get list and delete test passed")
+
 	return projectID1, projectID2
 }
 
 func projectsRequest(data string, expectedResponse []int, reqType string)(interface{}) {
-	return makeRequest(data, expectedResponse, "http://192.168.99.100:1338", reqType)
+	return makeRequest(data, expectedResponse, "1338", reqType)
 }
