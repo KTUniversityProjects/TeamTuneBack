@@ -7,3 +7,9 @@ type ProjectRequest struct{
 	Session core.Session `json:"session,omitempty"`
 }
 
+
+type ProjectEditRequest struct{
+	Project core.ProjectEdit      `json:"project,omitempty"`
+	Session core.Session `json:"session,omitempty"`
+}
+

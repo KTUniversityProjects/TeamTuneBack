@@ -18,6 +18,13 @@ type Project struct {
 	Users []ProjectUser `json:"users,omitempty" bson:"users,omitempty"`
 }
 
+type ProjectEdit struct {
+	ID bson.ObjectId    `json:"id,omitempty" bson:"_id,omitempty"`
+	Name string         `json:"name,omitempty" bson:"name,omitempty"`
+	Description string  `json:"description,omitempty" bson:"description,omitempty"`
+	Users []string `json:"users,omitempty" bson:"users,omitempty"`
+}
+
 type User struct {
 	Id bson.ObjectId        `json:"id,omitempty" bson:"_id,omitempty"`
 	Username string  `json:"username,omitempty" bson:"username,omitempty"`
