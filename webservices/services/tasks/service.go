@@ -21,7 +21,7 @@ func deleteHandler(){
 	user := core.Dao.CheckSession(data.Session)
 
 	//check if user able to delete task
-	checkUser(data.Task.ID, user)
+	checkTaskUser(data.Task.ID, user)
 
 	deleteTask(data.Task.ID)
 }
@@ -30,8 +30,16 @@ func getHandler() {
 	//Parses request data to
 	var data TaskListRequest
 	core.DecodeRequest(&data)
-	//Gets all projects
-	getList(data.BoardID)
+
+	//Gets user
+	user := core.Dao.CheckSession(data.Session)
+
+
+	//check if user able to view board
+	checkUser(data.Board.ID, user)
+
+	//Gets all tasks
+	getList(data.Board.ID)
 }
 
 func addHandler() {

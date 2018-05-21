@@ -1,6 +1,5 @@
 package main
 
-import "gopkg.in/mgo.v2/bson"
 import "core"
 
 type TaskCreationRequest struct {
@@ -16,6 +15,6 @@ type TaskRequest struct {
 
 //listo grazinimui
 type TaskListRequest struct{
-	BoardID bson.ObjectId		`json:"board"`
+	Board core.Board		`json:"board"`
 	Session core.Session		`json:"session"`
 }

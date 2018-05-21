@@ -33,6 +33,27 @@ func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 	}
 }
 
+// Remove board from project
+func RemoveBoardFromProject(boardID bson.ObjectId) {
+
+	var board core.Board
+	fmt.Println(boardID)
+	core.Dao.C("boards")
+	err := core.Dao.Collection.Find(bson.M{"_id" : boardID}).Select(bson.M{"project":1}).One(&board)
+	if err != nil{
+		fmt.Println(err)
+		core.ThrowResponse("database_error")
+	}
+
+	fmt.Println(board.ProjectID)
+	core.Dao.C("projects")
+	err = core.Dao.Collection.UpdateId(board.ProjectID, bson.M{"$pull": bson.M{"boards": boardID}})
+	if err != nil{
+		fmt.Println(err)
+		core.ThrowResponse("database_error")
+	}
+}
+
 //Removes Board from Database
 func removeBoard(boardID bson.ObjectId) {
 
@@ -45,6 +66,7 @@ func removeBoard(boardID bson.ObjectId) {
 		core.ThrowResponse("database_error")
 	}
 
+	RemoveBoardFromProject(boardID)
 	//Removes board
 	core.Dao.C("boards")
 	err = core.Dao.Collection.Remove(bson.M{"_id": boardID})
@@ -65,6 +87,7 @@ func getList(projectID bson.ObjectId) {
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
+	/*
 	core.Dao.C("tasks")
 
 	for id, element := range results {
@@ -74,6 +97,7 @@ func getList(projectID bson.ObjectId) {
 			core.ThrowResponse("database_error")
 		}
 	}
+	*/
 
 	core.SetData(results)
 }
