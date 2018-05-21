@@ -3,8 +3,7 @@ package main
 import (
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
-	"../../core"
-	"../../core/structures"
+	"core"
 	"fmt"
 	"time"
 )
@@ -47,10 +46,10 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 //Check if correct username and password
-func  checkCredentials(user structures.User) (bson.ObjectId) {
+func  checkCredentials(user core.User) (bson.ObjectId) {
 	core.Dao.C("users")
 
-	var login = structures.User{}
+	var login = core.User{}
 	err := core.Dao.Collection.Find(bson.M{"username": user.Username}).Select(bson.M{"_id" :1, "password" : 1}).One(&login)
 	if err != nil {
 		fmt.Println("Wrong username")
@@ -71,7 +70,7 @@ func createSession(userID bson.ObjectId) {
 	sessionID := bson.NewObjectId()
 
 	//Create session object for insertion
-	var session = structures.Session{
+	var session = core.Session{
 		SessionID:sessionID,UserID:userID,
 		Expires:time.Now().Add(time.Duration(24 * time.Hour))}
 
@@ -80,14 +79,14 @@ func createSession(userID bson.ObjectId) {
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
-
+	fmt.Println(session)
 	core.SetData(session)
 }
 
 
 
 //Adds User to Database
-func addUser(user structures.User) {
+func addUser(user core.User) {
 	core.Dao.C("users")
 
 	var err error
@@ -95,7 +94,7 @@ func addUser(user structures.User) {
 	if err != nil {
 		core.ThrowResponse("encryption_error")
 	}
-
+	
 	err = core.Dao.Collection.Insert(bson.M{"username":user.Username, "password":user.Password, "email":user.Email})
 	if err != nil {
 		core.ThrowResponse("database_error")
@@ -103,7 +102,7 @@ func addUser(user structures.User) {
 }
 
 //Checks if User and Email does not exists in Database
-func checkFieldsExistance(user structures.User) {
+func checkFieldsExistance(user core.User) {
 	core.Dao.C("users")
 
 	count, err := core.Dao.Collection.Find(bson.M{"username": user.Username}).Count()
@@ -124,7 +123,7 @@ func checkFieldsExistance(user structures.User) {
 }
 
 //Validates form fields
-func validate(user structures.User) {
+func validate(user core.User) {
 
 	if user.Username == "" || user.Password == "" || user.Email == "" {
 		core.ThrowResponse("empty_fields")

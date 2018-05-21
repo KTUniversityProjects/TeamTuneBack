@@ -1,9 +1,8 @@
 package main
 
 import (
+	"core"
 	"gopkg.in/mgo.v2/bson"
-	"../../core"
-	"../../core/structures"
 	"fmt"
 )
 
@@ -11,7 +10,7 @@ import (
 func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 
 	core.Dao.C("boards")
-	var board structures.Board
+	var board core.Board
 
 	err := core.Dao.Collection.Find(bson.M{"_id": boardID}).Select(bson.M{"project": 1}).One(&board)
 	if err != nil {
@@ -30,7 +29,7 @@ func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 	if count == 0 {
 		fmt.Println("CheckProject")
 		fmt.Println(err)
-		core.ThrowResponse("project_not_exists")
+		core.ThrowResponse("no_permission")
 	}
 }
 
@@ -60,7 +59,7 @@ func removeBoard(boardID bson.ObjectId) {
 func getList(projectID bson.ObjectId) {
 	core.Dao.C("boards")
 
-	var results []structures.Board
+	var results []core.Board
 	fmt.Println(projectID)
 	err := core.Dao.Collection.Find(bson.M{"project": projectID}).Select(bson.M{"_id": 1, "name": 1}).All(&results)
 	if err != nil {
@@ -97,7 +96,7 @@ func CheckUser(projectID bson.ObjectId, userID bson.ObjectId) {
 }
 
 //Checks board existance for project
-func checkFieldsExistance(board structures.Board) {
+func checkFieldsExistance(board core.Board) {
 	core.Dao.C("projects")
 
 	count, err := core.Dao.Collection.Find(bson.M{"name": board.Name, "project": board.ProjectID}).Count()
@@ -110,7 +109,7 @@ func checkFieldsExistance(board structures.Board) {
 }
 
 //Validates BOard data
-func validate(board structures.Board, project structures.Project) {
+func validate(board core.Board, project core.Project) {
 
 	if board.Name == "" {
 		core.ThrowResponse("empty_fields")
@@ -129,21 +128,21 @@ func validate(board structures.Board, project structures.Project) {
 }
 
 //Gets project for board creation
-func getProject(board structures.Board, userID bson.ObjectId) structures.Project {
+func getProject(board core.Board, userID bson.ObjectId) core.Project {
 	core.Dao.C("projects")
 
-	var project = structures.Project{}
+	var project = core.Project{}
 	err := core.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": bson.M{"_id": userID}}}).One(&project)
 
 	if err != nil || project.ID == "" {
-		core.ThrowResponse("project_not_exists")
+		core.ThrowResponse("no_permission")
 	}
 
 	return project
 }
 
 //Adds Board to Database
-func addBoard(board structures.Board) {
+func addBoard(board core.Board) {
 	core.Dao.C("boards")
 
 	board.ID = bson.NewObjectId()

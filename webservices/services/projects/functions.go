@@ -1,14 +1,13 @@
 package main
 
-import "gopkg.in/mgo.v2/bson"
-import "../../core"
 import (
-	"../../core/structures"
+	"gopkg.in/mgo.v2/bson"
+	"core"
 	"fmt"
 )
 
 //Chech Project existance for User
-func checkFieldsExistance(project structures.Project) {
+func checkFieldsExistance(project core.Project) {
 	core.Dao.C("projects")
 
 	count, err := core.Dao.Collection.Find(bson.M{"name": project.Name, "users": bson.M{"$elemMatch": project.Users[0]}}).Count()
@@ -21,7 +20,7 @@ func checkFieldsExistance(project structures.Project) {
 }
 
 //Validates project Data
-func validate(project structures.Project) {
+func validate(project core.Project) {
 
 	if project.Name == "" {
 		core.ThrowResponse("empty_fields")
@@ -31,7 +30,7 @@ func validate(project structures.Project) {
 }
 
 //Adds Project to Database
-func addProject(project structures.Project) {
+func addProject(project core.Project) {
 	core.Dao.C("projects")
 
 	project.ID = bson.NewObjectId()
@@ -44,13 +43,13 @@ func addProject(project structures.Project) {
 }
 
 //Gets projects list by userID or One parcitular project of project.ID is not nil
-func getList(userID bson.ObjectId, project structures.Project) {
+func getList(userID bson.ObjectId, project core.Project) {
 	core.Dao.C("projects")
 
 	//picks one project
 	if project.ID != "" {
 
-		var result []structures.Project
+		var result []core.Project
 		err := core.Dao.Collection.Find(bson.M{"_id": project.ID, "users": bson.M{"$elemMatch": bson.M{"_id": userID}}}).One(&result)
 		if err != nil {
 			core.ThrowResponse("database_error")
@@ -59,7 +58,7 @@ func getList(userID bson.ObjectId, project structures.Project) {
 		core.SetData(result)
 		//Gets all list
 	} else {
-		var results []structures.Project
+		var results []core.Project
 		err := core.Dao.Collection.Find(bson.M{"users": bson.M{"$elemMatch": bson.M{"_id": userID}}}).Select(bson.M{"_id": 1, "name": 1}).All(&results)
 		if err != nil {
 			core.ThrowResponse("database_error")
@@ -70,7 +69,7 @@ func getList(userID bson.ObjectId, project structures.Project) {
 }
 
 //Checks right for deleting
-func checkUser(project structures.Project) {
+func checkUser(project core.Project) {
 
 	core.Dao.C("projects")
 
@@ -83,7 +82,7 @@ func checkUser(project structures.Project) {
 	if count == 0 {
 		fmt.Println("CheckProject")
 		fmt.Println(err)
-		core.ThrowResponse("project_not_exists")
+		core.ThrowResponse("no_permission")
 	}
 }
 
@@ -92,7 +91,7 @@ func removeBoards(projectID bson.ObjectId) {
 
 	core.Dao.C("boards")
 
-	var boards []structures.Board
+	var boards []core.Board
 	err := core.Dao.Collection.Find(bson.M{"project": projectID}).Select(bson.M{"_id": 1}).All(&boards)
 	if err != nil {
 		fmt.Println("GetBoards")

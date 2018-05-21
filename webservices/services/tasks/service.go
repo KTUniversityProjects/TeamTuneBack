@@ -1,36 +1,42 @@
 package main
 
 import (
-"../../core"
-"../../core/structures"
+	"core"
 	_"fmt"
 )
 
-var servicePort = "1341"
 
 func main() {
 	core.AddRouting("PUT", addHandler)
 	core.AddRouting("POST", getHandler)
-	//core.AddRouting("DELETE", deleteHandler)
-	core.Initialize(servicePort)
+	core.AddRouting("DELETE", deleteHandler)
+	core.Initialize()
 }
 
 func deleteHandler(){
+	var data TaskRequest
+	//Parses request data
+	core.DecodeRequest(&data)
 
+	//Gets user
+	user := core.Dao.CheckSession(data.Session)
 
+	//check if user able to delete task
+	checkUser(data.Task.ID, user)
+
+	deleteTask(data.Task.ID)
 }
 
 func getHandler() {
 	//Parses request data to
-	var data structures.TaskListRequest
+	var data TaskListRequest
 	core.DecodeRequest(&data)
 	//Gets all projects
 	getList(data.BoardID)
 }
 
 func addHandler() {
-
-	var data structures.TaskCreationRequest
+	var data TaskCreationRequest
 	//Parses request data
 	core.DecodeRequest(&data)
 

@@ -6,22 +6,16 @@ import "os"
 var Config = ConfigStruct{
 
 	//Mongo Database
-	DatabaseHost: "localhost",
+	DatabaseHost: "mongo",
 	DatabasePort: "27017",
-	DatabaseName: "teamtune",
-
-	//Server
-	Host: "localhost"}
+	DatabaseName: "teamtune"}
 
 var ConfigDev = ConfigStruct{
 
 	//Mongo Database
-	DatabaseHost: "localhost",
+	DatabaseHost: "mongo",
 	DatabasePort: "27017",
-	DatabaseName: "teamtune",
-
-	//Server
-	Host: "localhost"}
+	DatabaseName: "teamtune"}
 
 
 func Exists(name string) bool {

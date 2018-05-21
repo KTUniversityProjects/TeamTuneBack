@@ -3,7 +3,6 @@ package core
 import  (
 	"gopkg.in/mgo.v2"
 	"fmt"
-	"github.com/StulIK/TeamTune/webservices/core/structures"
 	"gopkg.in/mgo.v2/bson"
 	"time"
 )
@@ -30,18 +29,20 @@ func (r *MongoDatabase) C(collection string){
 }
 
 //Method for connection
-func (r *MongoDatabase) Connect(host string, databaseName string){
+func (r *MongoDatabase) Connect(host string, databaseName string)(bool){
 
 	r.Session, r.Error = mgo.Dial(host)
 	if r.Error != nil{
 		fmt.Print(r.Error)
+		return false
 	}
 
 	r.D(databaseName)
+	return true
 }
 
 //Method for connection
-func (r *MongoDatabase) CheckSession(session structures.Session) (bson.ObjectId){
+func (r *MongoDatabase) CheckSession(session Session) (bson.ObjectId){
 	r.C("sessions")
 
 	//finds session

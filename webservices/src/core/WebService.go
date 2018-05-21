@@ -4,25 +4,31 @@ import (
 	"net/http"
 	"encoding/json"
 	"fmt"
+	"os"
+	"log"
 )
 
 func AddRouting(requestType string, function func()){
 	dofunc[requestType] = function
 }
 
-func Initialize(port string){
+var P Response
+var connected = false
+
+func Initialize(){
 	AddRouting("OPTIONS", func(){})
 	loadResponses()
+
 	if Exists("developer") {
-		Dao.Connect(ConfigDev.DatabaseHost + ":" + ConfigDev.DatabasePort, ConfigDev.DatabaseName)
+		connected = Dao.Connect(ConfigDev.DatabaseHost + ":" + ConfigDev.DatabasePort, ConfigDev.DatabaseName)
 	} else {
-		Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
+		connected = Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)
 	}
+
 	http.HandleFunc("/", requestFunc)
-	http.ListenAndServe(Config.Host + ":" + port, nil)
+	http.ListenAndServe(":777", nil)
 }
 
-var P Response
 
 //Adds CORS header to response Writer
 func CORS(w http.ResponseWriter) {
@@ -33,6 +39,18 @@ func CORS(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")
 }
 
+func writeLog(error string) {
+	f, err := os.OpenFile("logFile", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	log.SetOutput(f)
+	log.Println(error)
+	f.Close()
+}
+
 var dofunc = make(map[string]func())
 var currentRequest *http.Request
 
@@ -41,6 +59,10 @@ func requestFunc(w http.ResponseWriter, r *http.Request){
 	currentRequest = r
 	P = Response{ResponseCode: 0, ResponseMsg: "Success"}
 	defer PrintReponse(w)
+
+	if !connected{
+		ThrowResponse("database_connection")
+	}
 
 	if val, ok := dofunc[r.Method]; ok {
 		val()

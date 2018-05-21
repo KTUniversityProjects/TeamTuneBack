@@ -1,23 +1,22 @@
 package main
 
 import (
-	"../../core"
-	"../../core/structures"
+	"core"
+	"fmt"
 )
 
-var servicePort = "1337"
-
 func main() {
+	fmt.Println("serverStarted")
 	core.AddRouting("DELETE", deleteHandler)
 	core.AddRouting("PUT", createHandler)
 	core.AddRouting("POST", getHandler)
-	core.Initialize(servicePort)
+	core.Initialize()
 }
 
 func deleteHandler() {
 
 	//Parses request data to
-	var data structures.BoardRequest
+	var data BoardRequest
 	core.DecodeRequest(&data)
 
 	//Gets user
@@ -36,7 +35,7 @@ func deleteHandler() {
 func getHandler() {
 
 	//Parses request data to
-	var data structures.BoardListRequest
+	var data BoardListRequest
 	core.DecodeRequest(&data)
 
 	//Session check
@@ -53,7 +52,7 @@ func getHandler() {
 func createHandler() {
 
 	//Parses request data to
-	var data structures.BoardRequest
+	var data BoardRequest
 	core.DecodeRequest(&data)
 
 	//Gets user

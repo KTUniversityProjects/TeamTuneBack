@@ -1,29 +1,26 @@
 package main
 
 import (
-	"../../core"
-	"../../core/structures"
+	"core"
 )
-
-var servicePort = "1338"
 
 func main() {
 	core.AddRouting("DELETE", deleteHandler)
 	core.AddRouting("PUT", createHandler)
 	core.AddRouting("POST", getHandler)
-	core.Initialize(servicePort)
+	core.Initialize()
 }
 
 func createHandler() {
 	//Parses request data to
-	var data structures.ProjectRequest
+	var data ProjectRequest
 	core.DecodeRequest(&data)
 
 	//Gets user
 	user := core.Dao.CheckSession(data.Session)
 
 	//sets user as creator
-	data.Project.Users = []structures.ProjectUser{
+	data.Project.Users = []core.ProjectUser{
 		{
 			ID:      user,
 			Creator: true,
@@ -40,7 +37,7 @@ func createHandler() {
 func getHandler() {
 
 	//Parses request data to
-	var data structures.ProjectRequest
+	var data ProjectRequest
 	core.DecodeRequest(&data)
 
 	//Gets userID
@@ -53,12 +50,12 @@ func getHandler() {
 func deleteHandler() {
 
 	//Parses request data to
-	var data structures.ProjectRequest
+	var data ProjectRequest
 	core.DecodeRequest(&data)
 
 	//Gets user
 	user := core.Dao.CheckSession(data.Session)
-	data.Project.Users = []structures.ProjectUser{
+	data.Project.Users = []core.ProjectUser{
 		{
 			ID:user,
 			Creator:true,

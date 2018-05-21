@@ -1,0 +1,41 @@
+version: "3"
+services:
+  boards:
+    container_name: boards
+    restart: always
+    build: './services/boards'
+    ports:
+      - "1337:777"
+    links:
+      - mongo
+  projects:
+    container_name: projects
+    restart: always
+    build: './services/projects'
+    ports:
+      - "1338:777"
+    links:
+      - mongo
+  tasks:
+    container_name: tasks
+    restart: always
+    build: './services/tasks'
+    ports:
+      - "1341:777"
+    links:
+      - mongo
+  users:
+    container_name: users
+    restart: always
+    build: './services/users'
+    ports:
+      - "1339:777"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - /data/db:/data/db
+    ports:
+      - "27017:27017"
