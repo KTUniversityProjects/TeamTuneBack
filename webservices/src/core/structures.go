@@ -31,7 +31,7 @@ type Board struct {
 	ID bson.ObjectId        `json:"id,omitempty" bson:"_id,omitempty"`
 	Name string             `json:"name" bson:"name,omitempty"`
 	Description string      `json:"description,omitempty" bson:"description,omitempty"`
-	ProjectID bson.ObjectId `json:"project,omitempty" bson:"project"`
+	ProjectID bson.ObjectId `json:"project,omitempty" bson:"project,"`
 	Tasks []Task   `json:"tasks,omitempty" bson:"_tasks,omitempty"`
 }
 

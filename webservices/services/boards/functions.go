@@ -183,6 +183,24 @@ func addBoard(board core.Board) {
 	core.ThrowResponse("board_created")
 }
 
+func editBoard(data core.Board) {
+	core.Dao.C("boards")
+
+	if data.Name != "" {
+		err := core.Dao.Collection.Update(bson.M{"_id": data.ID}, bson.M{"$set": bson.M{"name": data.Name}})
+		if err != nil {
+			fmt.Println(err)
+			core.ThrowResponse("database_error")
+		}
+	}
+	if data.Description != "" {
+		err := core.Dao.Collection.Update(bson.M{"_id": data.ID}, bson.M{"$set": bson.M{"description": data.Description}})
+		if err != nil {
+			fmt.Println(err)
+			core.ThrowResponse("database_error")
+		}
+	}
+}
 //Removes Project from Database
 func removeTasks(boardID bson.ObjectId) {
 
