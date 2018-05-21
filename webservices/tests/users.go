@@ -24,7 +24,7 @@ func registerTest(){
 func loginTest()(string, string, string, string){
 	data := usersRequest("{\"username\":\"test\",\"password\":\"test\"}",
 		[]int{0}, "POST").(map[string]interface{})
-	data2 := usersRequest("{\"username\":\"test2\",\"password\":\"test\"}",
+	data2 := usersRequest("{\"username\":\"test2\",\"password\":\"test2\"}",
 		[]int{0}, "POST").(map[string]interface{})
 	usersRequest("{\"username\":\"threat\",\"password\":\"slaptazodis2\"}",
 		[]int{263}, "POST")
