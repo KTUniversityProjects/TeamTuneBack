@@ -94,7 +94,9 @@ func PrintReponse(w http.ResponseWriter) {
 		return
 	}
 	fmt.Fprintf(w, string(result))
-	recover()
+	if r := recover(); r!= nil {
+		fmt.Println("recovered from ", r)
+	}
 }
 
 //Sets Response by ID (From Errors.go file)

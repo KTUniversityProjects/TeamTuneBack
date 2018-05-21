@@ -46,7 +46,6 @@ func addProject(project core.Project) {
 func editProject(data core.Project) {
 	core.Dao.C("projects")
 
-	//project.ID = bson.NewObjectId()
 	fmt.Println("name")
 	fmt.Println(data.Name)
 	if data.Name != "" {
@@ -63,9 +62,6 @@ func editProject(data core.Project) {
 			core.ThrowResponse("database_error")
 		}
 	}
-
-
-	//core.SetData(project.ID)
 }
 
 //Gets projects list by userID or One parcitular project of project.ID is not nil
