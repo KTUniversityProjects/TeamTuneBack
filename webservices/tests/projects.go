@@ -15,7 +15,7 @@ func getAndDeleteTest(sessionID string, userID string,sessionID2 string, userID2
 	projectsRequest("{\"session\": {\"id\": \"" + sessionID + "\",\"user\": \"" + userID + "\"},\"project\": {\"name\": \"Projektas2\",\"description\": \"Čia yra projektas 1 sukūriau jį pasitestavimui\"}}",
 		[]int{0, 221}, "PUT")
 
-	projectsRequest("{\"session\": {\"id\": \"" + sessionID + "\",\"user\": \"" + userID + "\"},\"project\": {\"name\": \"Projektas2\",\"description\": \"Čia yra projektas 1 sukūriau jį pasitestavimui\"}}",
+	projectsRequest("{\"session\": {\"id\": \"" + sessionID2 + "\",\"user\": \"" + userID2 + "\"},\"project\": {\"name\": \"Projektas2\",\"description\": \"Čia yra projektas 1 sukūriau jį pasitestavimui\"}}",
 		[]int{0, 221}, "PUT")
 
 	data := projectsRequest("{\"session\": {\"id\": \"" + sessionID + "\",\"user\": \"" + userID + "\"}}",
@@ -38,7 +38,6 @@ func getAndDeleteTest(sessionID string, userID string,sessionID2 string, userID2
 		projectsRequest("{\"session\": {\"id\": \"" + sessionID2 + "\",\"user\": \"" + userID2 + "\"},\"project\": {\"id\":\"" + data2[i].(map[string]interface{})["id"].(string) + "\"}}",
 			[]int{0}, "DELETE")
 	}
-	fmt.Println("Project Get list and delete test passed")
 }
 
 func projectsTest(sessionID string, userID string,sessionID2 string, userID2 string)(string, string){

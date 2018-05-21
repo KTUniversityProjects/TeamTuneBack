@@ -95,7 +95,7 @@ func editProject(data core.ProjectEdit) {
 			var oneUser core.User
 			core.Dao.C("users")
 			err = core.Dao.Collection.Find(bson.M{"email":data.Users[i]}).One(&oneUser)
-			if err != nil { //ŠITOJ vietoj gali būti, kad mes errorą kai neras userio, tai tą errorą reikia ignoruot kažkaip
+			if err != nil && err.Error() != "not found"{
 				fmt.Println(err)
 				core.ThrowResponse("database_error")
 			}
