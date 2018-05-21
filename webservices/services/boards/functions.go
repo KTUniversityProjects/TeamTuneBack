@@ -68,14 +68,11 @@ func getList(projectID bson.ObjectId) {
 	core.Dao.C("tasks")
 
 	for id, element := range results {
-		fmt.Println(results[id].ID)
 		err := core.Dao.Collection.Find(bson.M{"board": element.ID}).Select(bson.M{"_id": 1, "name": 1}).All(&results[id].Tasks)
 		if err != nil {
 			fmt.Println(err)
 			core.ThrowResponse("database_error")
 		}
-		fmt.Println("taskai")
-		fmt.Println(results[id].Tasks)
 	}
 
 	core.SetData(results)

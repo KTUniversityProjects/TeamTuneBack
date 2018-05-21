@@ -9,11 +9,16 @@ import (
 )
 
 func main() {
+	//Tests users, creates 2 users and logs them for future testing
 	sessionID1,userID1,sessionID2,userID2 := usersTest()
+
+	//Prints session data
 	fmt.Println("SESSIONID1 - " + sessionID1)
 	fmt.Println("USERID1 - " + userID1)
 	fmt.Println("SESSIONID2 - " + sessionID2)
 	fmt.Println("USERID2 - " + userID2)
+
+	//Uses 2 logged session to test projects functionallity, creates two projects for each user for future testing
 	projectID1, projectID2 := projectsTest(sessionID1, userID1,sessionID2,userID2)
 	fmt.Println("PROJECTID1 - " + projectID1)
 	fmt.Println("PROJECTID2 - " + projectID2)
