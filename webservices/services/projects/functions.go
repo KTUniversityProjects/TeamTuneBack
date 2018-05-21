@@ -42,6 +42,20 @@ func addProject(project core.Project) {
 	core.SetData(project.ID)
 }
 
+//Edits Project in Database
+func editProject(data ProjectRequest) {
+	core.Dao.C("projects")
+
+	//project.ID = bson.NewObjectId()
+
+	err := core.Dao.Collection.Update(bson.M{"_id": data.Project.ID}, bson.M{"$set": bson.M{"name": data.Project.Name ,"description": data.Project.Description}})
+	if err != nil {
+		fmt.Println(err)
+		core.ThrowResponse("database_error")
+	}
+	//core.SetData(project.ID)
+}
+
 //Gets projects list by userID or One parcitular project of project.ID is not nil
 func getList(userID bson.ObjectId, project core.Project) {
 	core.Dao.C("projects")
