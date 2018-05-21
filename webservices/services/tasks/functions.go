@@ -25,6 +25,18 @@ func addTask(task TaskCreationRequest) {
 	core.SetData(task.Task.ID)
 }
 
+func editBoard(data core.Task) {
+	core.Dao.C("tasks")
+
+	if data.Name != "" {
+		err := core.Dao.Collection.Update(bson.M{"_id": data.ID}, bson.M{"$set": bson.M{"name": data.Name}})
+		if err != nil {
+			fmt.Println(err)
+			core.ThrowResponse("database_error")
+		}
+	}
+}
+
 func getList(boardID bson.ObjectId) {
 	core.Dao.C("tasks")
 
@@ -51,24 +63,6 @@ func deleteTask(taskID bson.ObjectId) {
 	}
 }
 
-// Remove board from project
-func RemoveTaskFromBoard(taskID bson.ObjectId) {
-
-	var task core.Task
-
-	core.Dao.C("tasks")
-	err := core.Dao.Collection.Find(bson.M{"_id" : taskID}).Select(bson.M{"board":1}).One(&task)
-	if err != nil{
-		core.ThrowResponse("database_error")
-	}
-
-	core.Dao.C("boards")
-	err = core.Dao.Collection.UpdateId(task.BoardID, bson.M{"$pull": bson.M{"tasks": taskID}})
-	if err != nil{
-		core.ThrowResponse("database_error")
-	}
-}
-
 //checks if board contains user
 func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 
@@ -76,6 +70,7 @@ func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 
 	core.Dao.C("boards")
 	err := core.Dao.Collection.Find(bson.M{"_id": boardID}).Select(bson.M{"project": 1}).One(&board) //gauni project id
+
 	if err != nil || board.ProjectID == "" {
 		fmt.Println(err)
 		core.ThrowResponse("no_permission")
@@ -83,7 +78,6 @@ func checkUser(boardID bson.ObjectId, userID bson.ObjectId) {
 
 	core.Dao.C("projects")
 	count, err := core.Dao.Collection.Find(bson.M{"_id": board.ProjectID, "users": bson.M{"$elemMatch": bson.M{"_id":userID}}}).Count()
-	fmt.Println(count)
 	if err != nil{
 		fmt.Println(err)
 		core.ThrowResponse("database_error")
