@@ -80,6 +80,7 @@ func DecodeRequest(item interface{}) {
 	decoder := json.NewDecoder(currentRequest.Body)
 	err := decoder.Decode(&item)
 	if err != nil {
+		fmt.Println(err)
 		ThrowResponse("decode_failure")
 	}
 

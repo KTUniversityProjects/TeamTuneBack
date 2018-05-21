@@ -65,7 +65,7 @@ func deleteHandler() {
 	}
 
 	//validates
-	checkUser(data.Project)
+	checkUser(data.Project.ID, user)
 
 	//Remove Boards
 	removeBoards(data.Project.ID)
@@ -80,24 +80,12 @@ func patchHandler() {
 	core.DecodeRequest(&data)
 
 	//Gets user
+	user := core.Dao.CheckSession(data.Session)
 
-	//user := core.Dao.CheckSession(data.Session)
-
-	////sets user as creator
-	//data.Project.Users = []core.ProjectUser{
-	//	{
-	//		ID:      user,
-	//		Creator: true,
-	//	},
-	//}
+	//checkFieldsExistanceEdit(data.Project, user) //nieko nebevykdo po validate
 
 	//validates
-	//validate(data.Project) //nieko nebevykdo po validate
+	checkUser(data.Project.ID, user)
 
-	//fmt.Println( "Project")
-	//fmt.Println( data.Project)
-	//fmt.Println( "session")
-	//fmt.Println( data.Session)
-	//Adds project to database
 	editProject(data.Project)
 }

@@ -29,6 +29,19 @@ func validate(project core.Project) {
 	checkFieldsExistance(project)
 }
 
+//Chech Project existance for User
+func checkFieldsExistanceEdit(project core.ProjectEdit, userID bson.ObjectId) {
+	core.Dao.C("projects")
+
+	count, err := core.Dao.Collection.Find(bson.M{"name": project.Name, "users": bson.M{"$elemMatch": project.Users[0]}}).Count()
+	if err != nil {
+		core.ThrowResponse("database_error")
+	}
+	if count > 0 {
+		core.ThrowResponse("name_exists")
+	}
+}
+
 //Adds Project to Database
 func addProject(project core.Project) {
 	core.Dao.C("projects")
@@ -62,37 +75,43 @@ func editProject(data core.ProjectEdit) {
 			core.ThrowResponse("database_error")
 		}
 	}
-	if len(data.Users) != 0{
-		var users []core.ProjectUser	//is projekto
-		var users2 []bson.ObjectId		//is gautos uzklausos
+	if data.Users != nil && len(data.Users) != 0{
 
-		fmt.Println("test 1")
-		err := core.Dao.Collection.Find(bson.M{"_id":data.ID}).Select(bson.M{"users":1}).All(&users) //gauna useriu id is projekto
-		fmt.Println("test 2")
+		fmt.Println(data.ID)
+
+
+		var users []core.ProjectUser
+
+		err := core.Dao.Collection.Find(bson.M{"_id":data.ID}).Select(bson.M{"users":1}).All(&users)
 		if err != nil {
 			fmt.Println(err)
 			core.ThrowResponse("database_error")
 		}
 
-		//err = core.Dao.Collection.Find(bson.M{"_id":data.ID}).Select(bson.M{"users":1}).All(&users2) //gauna useriu id pagal atsiustus email
-		//if err != nil {
-		//	fmt.Println(err)
-		//	core.ThrowResponse("database_error")
-		//}
-
+		//ČIA BUS TAVO USERIAI PROJEKTO
 		fmt.Println(users)
 
-		for i:=0;i < len(users2); i++{
-			if stringInSlice(users2[i], users){
-				fmt.Println("reikia pridet")
-				fmt.Println(data.Users[i])
-				addUser(data.Users[i])
+		for i:=0; i < len(data.Users); i++{
+			var oneUser core.User
+			core.Dao.C("users")
+			err = core.Dao.Collection.Find(bson.M{"email":data.Users[i]}).One(&oneUser)
+			if err != nil { //ŠITOJ vietoj gali būti, kad mes errorą kai neras userio, tai tą errorą reikia ignoruot kažkaip
+				fmt.Println(err)
+				core.ThrowResponse("database_error")
+			}
+
+			found := false
+			for x:=0; x < len(users); x++{
+				if users[x].ID == oneUser.Id{
+					found=true
+				}
+			}
+			if !found {
+				core.Dao.C("projects")
+				//Čia pridedi prie to projekto userį data.Users[i]
 			}
 		}
-
-
 	}
-
 }
 func addUser(email string){
 	//core.Dao.C("users")
@@ -139,11 +158,11 @@ func getList(userID bson.ObjectId, project core.Project) {
 }
 
 //Checks right for deleting
-func checkUser(project core.Project) {
+func checkUser(projectID bson.ObjectId, userID bson.ObjectId) {
 
 	core.Dao.C("projects")
 
-	count, err := core.Dao.Collection.Find(bson.M{"_id": project.ID, "users": bson.M{"$elemMatch": project.Users[0]}}).Count()
+	count, err := core.Dao.Collection.Find(bson.M{"_id": projectID, "users": bson.M{"$elemMatch": bson.M{"_id" : userID}}}).Count()
 	if err != nil {
 		fmt.Println("FindUser")
 		fmt.Println(err)
