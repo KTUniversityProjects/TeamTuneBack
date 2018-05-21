@@ -19,7 +19,10 @@ func Initialize(){
 	AddRouting("OPTIONS", func(){})
 	loadResponses()
 
-	if Exists("developer") {
+	if Exists("C:/developer") {
+		fmt.Println(ConfigDev.DatabaseHost)
+		fmt.Println(ConfigDev.DatabasePort)
+		fmt.Println(ConfigDev.DatabaseName)
 		connected = Dao.Connect(ConfigDev.DatabaseHost + ":" + ConfigDev.DatabasePort, ConfigDev.DatabaseName)
 	} else {
 		connected = Dao.Connect(Config.DatabaseHost + ":" + Config.DatabasePort, Config.DatabaseName)

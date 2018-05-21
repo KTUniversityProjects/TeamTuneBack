@@ -13,7 +13,7 @@ var Config = ConfigStruct{
 var ConfigDev = ConfigStruct{
 
 	//Mongo Database
-	DatabaseHost: "mongo",
+	DatabaseHost: "localhost",
 	DatabasePort: "27017",
 	DatabaseName: "teamtune"}
 
