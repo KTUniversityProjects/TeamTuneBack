@@ -76,7 +76,7 @@ func deleteHandler() {
 
 func patchHandler() {
 	//Parses request data to
-	var data ProjectRequest
+	var data ProjectEditRequest
 	core.DecodeRequest(&data)
 
 	//Gets user
@@ -94,8 +94,10 @@ func patchHandler() {
 	//validates
 	//validate(data.Project) //nieko nebevykdo po validate
 
-	fmt.Println( "edit")
-	fmt.Println( data)
+	//fmt.Println( "Project")
+	//fmt.Println( data.Project)
+	//fmt.Println( "session")
+	//fmt.Println( data.Session)
 	//Adds project to database
 	editProject(data.Project)
 }
