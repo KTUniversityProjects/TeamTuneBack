@@ -10,6 +10,7 @@ func main() {
 	core.AddRouting("DELETE", deleteHandler)
 	core.AddRouting("PUT", createHandler)
 	core.AddRouting("POST", getHandler)
+	core.AddRouting("PATCH", patchHandler)
 	core.Initialize()
 }
 
@@ -66,4 +67,22 @@ func createHandler() {
 
 	//Adds project to database
 	addBoard(data.Board)
+}
+
+func patchHandler() {
+	//Parses request data to
+	var data BoardRequest
+	core.DecodeRequest(&data)
+	fmt.Println(data)
+	//Gets user
+	//user := core.Dao.CheckSession(data.Session)
+
+	//gets project
+	//project := getProject(data.Board, user)
+
+	//validates
+	//validate(data.Board, project)
+
+	//Adds project to database
+	editBoard(data.Board)
 }

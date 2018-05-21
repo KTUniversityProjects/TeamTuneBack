@@ -43,21 +43,21 @@ func addProject(project core.Project) {
 }
 
 //Edits Project in Database
-func editProject(data ProjectRequest) {
+func editProject(data core.Project) {
 	core.Dao.C("projects")
 
 	//project.ID = bson.NewObjectId()
 	fmt.Println("name")
-	fmt.Println(data.Project.Name)
-	if data.Project.Name != "" {
-		err := core.Dao.Collection.Update(bson.M{"_id": data.Project.ID}, bson.M{"$set": bson.M{"name": data.Project.Name}})
+	fmt.Println(data.Name)
+	if data.Name != "" {
+		err := core.Dao.Collection.Update(bson.M{"_id": data.ID}, bson.M{"$set": bson.M{"name": data.Name}})
 		if err != nil {
 			fmt.Println(err)
 			core.ThrowResponse("database_error")
 		}
 	}
-	if data.Project.Description != "" {
-		err := core.Dao.Collection.Update(bson.M{"_id": data.Project.ID}, bson.M{"$set": bson.M{"description": data.Project.Description}})
+	if data.Description != "" {
+		err := core.Dao.Collection.Update(bson.M{"_id": data.ID}, bson.M{"$set": bson.M{"description": data.Description}})
 		if err != nil {
 			fmt.Println(err)
 			core.ThrowResponse("database_error")

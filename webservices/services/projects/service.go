@@ -97,5 +97,5 @@ func patchHandler() {
 	fmt.Println( "edit")
 	fmt.Println( data)
 	//Adds project to database
-	editProject(data)
+	editProject(data.Project)
 }
