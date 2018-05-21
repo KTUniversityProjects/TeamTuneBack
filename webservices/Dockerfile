@@ -1,4 +1,4 @@
-FROM golang:1.9.2-alpine3.6
+FROM golang:1.9.2
 
 COPY . /go/
 RUN export GOPATH=$HOME/project/
