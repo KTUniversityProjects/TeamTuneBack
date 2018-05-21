@@ -87,7 +87,7 @@ func getList(projectID bson.ObjectId) {
 	if err != nil {
 		core.ThrowResponse("database_error")
 	}
-	/*
+
 	core.Dao.C("tasks")
 
 	for id, element := range results {
@@ -97,7 +97,7 @@ func getList(projectID bson.ObjectId) {
 			core.ThrowResponse("database_error")
 		}
 	}
-	*/
+
 
 	core.SetData(results)
 }

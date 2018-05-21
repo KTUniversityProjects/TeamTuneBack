@@ -58,6 +58,7 @@ func makeRequest(data string, expectedResponse []int, port string, reqType strin
 		testError(data, item, expectedResponse)
 	}
 
+	fmt.Println("Test - OK")
 	return item.ReturnData
 }
 

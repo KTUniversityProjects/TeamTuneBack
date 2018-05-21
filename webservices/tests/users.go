@@ -1,32 +1,30 @@
 package main
 
-import "fmt"
-
 func usersTest()(string, string, string, string){
 	registerTest()
 	return loginTest()
 }
 
 func registerTest(){
-	usersRequest("{\"username\":\"threat\",\"password\":\"slaptazodis\"}",
+	usersRequest("{\"username\":\"test\",\"password\":\"test\"}",
 		[]int{220}, "PUT")
-	usersRequest("{\"username\":\"threatx\",\"password\":\"slaptazodis\",\"email\":\"viliusx@rinkodara.lt\",\"password2\":\"slaptazodis\"}",
+	usersRequest("{\"username\":\"test\",\"password\":\"test\",\"email\":\"test@test.lt\",\"password2\":\"test\"}",
 		[]int{0, 260, 261}, "PUT")
-	usersRequest("{\"username\":\"threat\",\"password\":\"slaptazodis\",\"email\":\"viliusx2@rinkodara.lt\",\"password2\":\"slaptazodis\"}",
+	usersRequest("{\"username\":\"test2\",\"password\":\"test2\",\"email\":\"test2@test2.lt\",\"password2\":\"test2\"}",
 		[]int{0, 260, 261}, "PUT")
 
-	usersRequest("{\"username\":\"threatxz\",\"password\":\"slaptazodis\",\"email\":\"viliusx@rinkodara.lt\",\"password2\":\"slaptazodis\"}",
-		[]int{261}, "PUT")
-	usersRequest("{\"username\":\"threatx\",\"password\":\"slaptazodis\",\"email\":\"viliusxz@rinkodara.lt\",\"password2\":\"slaptazodis\"}",
+	usersRequest("{\"username\":\"test2\",\"password\":\"test2\",\"email\":\"test2@ccc.lt\",\"password2\":\"test2\"}",
 		[]int{260}, "PUT")
-
-	fmt.Println("Register test passed")
+	usersRequest("{\"username\":\"dsadsadsa\",\"password\":\"test2\",\"email\":\"test2@test2.lt\",\"password2\":\"test2\"}",
+		[]int{261}, "PUT")
+	usersRequest("{\"username\":\"dsadsadsa\",\"password\":\"tesxt2\",\"email\":\"dsadsadsa@test2.lt\",\"password2\":\"test2\"}",
+		[]int{262}, "PUT")
 }
 
 func loginTest()(string, string, string, string){
-	data := usersRequest("{\"username\":\"threatx\",\"password\":\"slaptazodis\"}",
+	data := usersRequest("{\"username\":\"test\",\"password\":\"test\"}",
 		[]int{0}, "POST").(map[string]interface{})
-	data2 := usersRequest("{\"username\":\"threat\",\"password\":\"slaptazodis\"}",
+	data2 := usersRequest("{\"username\":\"test2\",\"password\":\"test\"}",
 		[]int{0}, "POST").(map[string]interface{})
 	usersRequest("{\"username\":\"threat\",\"password\":\"slaptazodis2\"}",
 		[]int{263}, "POST")
@@ -36,7 +34,6 @@ func loginTest()(string, string, string, string){
 	usersRequest("{\"username\":\"....\",\"password\":\"....\"}",
 		[]int{263}, "POST")
 
-	fmt.Println("Login test passed")
 	return data["id"].(string), data["user"].(string), data2["id"].(string), data2["user"].(string)
 }
 
