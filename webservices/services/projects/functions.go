@@ -89,7 +89,7 @@ func editProject(data core.ProjectEdit) {
 		}
 
 		//ČIA BUS TAVO USERIAI PROJEKTO
-		fmt.Println(project.Users)
+		//fmt.Println(project.Users)
 
 		for i:=0; i < len(data.Users); i++{
 			var oneUser core.User
@@ -99,37 +99,31 @@ func editProject(data core.ProjectEdit) {
 				fmt.Println(err)
 				core.ThrowResponse("database_error")
 			}
+			if oneUser.Email != ""  || oneUser.Username != "" {
+				fmt.Println(oneUser) //rastas pagal pasta
 
-			found := false
-			for x:=0; x < len(project.Users); x++{
-				if project.Users[x].ID == oneUser.Id{
-					found=true
+				found := false
+				for x := 0; x < len(project.Users); x++ {
+					if project.Users[x].ID == oneUser.Id {
+						found = true
+					}
+				}
+				if !found {
+					core.Dao.C("projects")
+					//Čia pridedi prie to projekto userį data.Users[i]
+					oneUser2 := core.ProjectUser{ID:oneUser.Id,Creator:false}
+
+					err = core.Dao.Collection.Update(bson.M{"_id": data.ID}, bson.M{"$push": bson.M{"users":oneUser2}})
+					if err != nil {
+						fmt.Println(err)
+						core.ThrowResponse("database_error")
+					}
 				}
 			}
-			if !found {
-				core.Dao.C("projects")
-				//Čia pridedi prie to projekto userį data.Users[i]
-			}
 		}
 	}
 }
-func addUser(email string){
-	//core.Dao.C("users")
-	//err := core.Dao.Collection.Find(bson.M{"email":email}.Select(bson.M{"users":1}).One(user)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	core.ThrowResponse("database_error")
-	//}
 
-}
-func stringInSlice(a bson.ObjectId, list []core.ProjectUser) bool {
-	for _, b := range list {
-		if b.ID == a {
-			return false
-		}
-	}
-	return true
-}
 
 //Gets projects list by userID or One parcitular project of project.ID is not nil
 func getList(userID bson.ObjectId, project core.Project) {
