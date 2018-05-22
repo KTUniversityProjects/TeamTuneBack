@@ -80,16 +80,16 @@ func editProject(data core.ProjectEdit) {
 		fmt.Println(data.ID)
 
 
-		var users []core.ProjectUser
+		var project core.Project
 
-		err := core.Dao.Collection.Find(bson.M{"_id":data.ID}).Select(bson.M{"users":1}).All(&users)
+		err := core.Dao.Collection.Find(bson.M{"_id":data.ID}).Select(bson.M{"users":1}).One(&project)
 		if err != nil {
 			fmt.Println(err)
 			core.ThrowResponse("database_error")
 		}
 
 		//ČIA BUS TAVO USERIAI PROJEKTO
-		fmt.Println(users)
+		fmt.Println(project.Users)
 
 		for i:=0; i < len(data.Users); i++{
 			var oneUser core.User
@@ -101,8 +101,8 @@ func editProject(data core.ProjectEdit) {
 			}
 
 			found := false
-			for x:=0; x < len(users); x++{
-				if users[x].ID == oneUser.Id{
+			for x:=0; x < len(project.Users); x++{
+				if project.Users[x].ID == oneUser.Id{
 					found=true
 				}
 			}
