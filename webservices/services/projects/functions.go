@@ -138,9 +138,10 @@ func getList(userID bson.ObjectId, project core.Project) {
 	//picks one project
 	if project.ID != "" {
 
-		var result []core.Project
+		var result core.Project
 		err := core.Dao.Collection.Find(bson.M{"_id": project.ID, "users": bson.M{"$elemMatch": bson.M{"_id": userID}}}).One(&result)
 		if err != nil {
+			fmt.Println(err)
 			core.ThrowResponse("database_error")
 		}
 
